@@ -2,7 +2,8 @@ from personal_assistant import PersonalAssistant
 
 
 def main() -> None:
-    print(PersonalAssistant())
+    app = PersonalAssistant()
+    app.run()
 
 if __name__ == "__main__":
     main()

@@ -1,4 +1,15 @@
-from .address_book_event_handlers import add_contact
+from .address_book_event_handlers import (
+    parse_input, 
+    add_contact, 
+    change_contact, 
+    show_phone, 
+    show_all, 
+    add_birthday, 
+    show_birthday, 
+    birthdays,
+    load_data,
+    save_data,
+)
 from .notes_event_handlers import add_note
 from .check_event_context import is_address_book_event, is_notes_event
 
@@ -6,6 +17,14 @@ from .check_event_context import is_address_book_event, is_notes_event
 __all__ = [
     "is_address_book_event",
     "is_notes_event",
-    "add_contact",
-    "add_note"
+    "parse_input", 
+    "add_contact", 
+    "change_contact", 
+    "show_phone", 
+    "show_all", 
+    "add_birthday", 
+    "show_birthday", 
+    "birthdays",
+    "load_data",
+    "save_data",
 ]
