@@ -1,5 +1,6 @@
 from personal_assistant import PersonalAssistant
 
+print("Hello")
 
 def main() -> None:
     print(PersonalAssistant())
