@@ -1,7 +1,7 @@
 from .address_book_event_handlers import (
     parse_input, 
     add_contact, 
-    change_contact, 
+    change_phone, 
     show_phone, 
     show_all, 
     add_birthday, 
@@ -19,7 +19,7 @@ __all__ = [
     "is_notes_event",
     "parse_input", 
     "add_contact", 
-    "change_contact", 
+    "change_phone", 
     "show_phone", 
     "show_all", 
     "add_birthday", 
