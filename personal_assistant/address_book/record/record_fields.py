@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from datetime import datetime
-from ...shared.error_handler.decorators.catch_error import ValidationError
+from ...shared.error_handler.decorators import ValidationError
+import re
 
 
 @dataclass
@@ -47,3 +48,30 @@ class Birthday(Field):
             self.date = datetime.strptime(value, self.DATE_FORMAT)
         except ValueError:
             raise ValidationError("Invalid date format. Please use DD.MM.YYYY")
+
+
+class Email(Field):
+    """Email field."""
+
+    def __init__(self, value: str):
+        value = value.strip()
+        self.validate(value)
+        super().__init__(value)
+
+    def validate(self, value: str) -> None:
+        EMAIL_REGEX = re.compile(r"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$")
+        if not EMAIL_REGEX.match(value):
+            raise ValidationError("Invalid email format")
+        
+
+class Address(Field):
+    """Address field."""
+
+    def __init__(self, value: str):
+        value = value.strip()
+        self.validate(value)
+        super().__init__(value)
+
+    def validate(self, value: str) -> None:
+        if not re.search(r"[A-Za-zА-Яа-я]", value):
+            raise ValidationError("Address must contain letters")

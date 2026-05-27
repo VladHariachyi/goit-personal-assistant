@@ -12,6 +12,7 @@ from .address_book_event_handlers import (
 )
 from .notes_event_handlers import add_note
 from .check_event_context import is_address_book_event, is_notes_event
+from .helpers import format_record, parse_contact_fields
 
 
 __all__ = [
@@ -27,4 +28,6 @@ __all__ = [
     "birthdays",
     "load_data",
     "save_data",
+    "format_record",
+    "parse_contact_fields"
 ]

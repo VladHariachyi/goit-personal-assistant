@@ -20,12 +20,11 @@ from .shared.event_handler.models import AddressBookEvents, NotesEvents, AB_DESC
 class PersonalAssistant:
 
     def __init__(self):
-        self.address_book = load_data()
         self.notes = Notes()
-        self.console = Console(highlight=False)
+        self.console = Console()
 
     def run(self) -> None:
-        book = self.address_book
+        book = load_data()
         table = Table(
             title="[bold green]Welcome to the assistant bot![/bold green]",
             show_lines=True
@@ -52,61 +51,54 @@ class PersonalAssistant:
                     print("[green]How can I help you?[/green]")
                 case "options":
                     self.show_options()
-
                 # --- ADDRESS BOOK ---
-                case "ab_add_contact":
-                    print("Add contact - TODO")
-                case "ab_remove_contact":
-                    print("Remove contact - TODO")
-                case "ab_search_contact":
-                    print("Search contact - TODO")
-                case "ab_add_phone":
+                case "add_contact":
                     print(add_contact(args, book))
-                case "ab_change_phone":
+                case "remove_contact":
+                    print("Remove contact - TODO")
+                case "search_contact":
+                    print("Search contact - TODO")
+                case "change_phone":
                     print(change_phone(args, book))
-                case "ab_show_phone":
+                case "show_phone":
                     print(show_phone(args, book))
-                case "ab_remove_phone":
+                case "remove_phone":
                     print("Remove phone - TODO")
-                case "ab_add_email":
+                case "add_email":
                     print("Add email - TODO")
-                case "ab_change_email":
+                case "change_email":
                     print("Change email - TODO")
-                case "ab_show_email":
+                case "show_email":
                     print("Show email - TODO")
-                case "ab_remove_email":
+                case "remove_email":
                     print("Remove email - TODO")
-                case "ab_add_address":
+                case "add_address":
                     print("Add address - TODO")
-                case "ab_change_address":
+                case "change_address":
                     print("Change address - TODO")
-                case "ab_show_address":
+                case "show_address":
                     print("Show address - TODO")
-                case "ab_remove_address":
+                case "remove_address":
                     print("Remove address - TODO")
-                case "ab_add_birthday":
+                case "add_birthday":
                     print(add_birthday(args, book))
-                case "ab_show_birthday":
+                case "show_birthday":
                     print(show_birthday(args, book))
-                case "ab_show_upcoming_birthdays":
-                    print(birthdays(book))
-                case "ab_show_all_contacts":
+                case "show_upcoming_birthdays":
+                    print(birthdays(args, book))
+                case "show_all_contacts":
                     print(show_all(book))
 
                 # --- NOTES ---
-                case "nt_add_note":
+                case "add_note":
                     print("Add note - TODO")
-
-                case "nt_add_tag":
+                case "add_tag":
                     print("Add tag - TODO")
-
-                case "nt_search_note":
+                case "search_note":
                     print("Search note - TODO")
-
-                case "nt_remove_note":
+                case "remove_note":
                     print("Remove note - TODO")
-
-                case "nt_change_note":
+                case "change_note":
                     print("Change note - TODO")
 
                 # --- fallback ---
@@ -116,7 +108,7 @@ class PersonalAssistant:
     def show_options(self):
         table = Table(title="Available commands", show_lines=True)
         table.add_column("Command", style="cyan")
-        table.add_column("Description", style="white")
+        table.add_column("Usage", style="white")
 
         # --- ADDRESS BOOK ---
         table.add_row("📒 Address Book", "", style="bold yellow")

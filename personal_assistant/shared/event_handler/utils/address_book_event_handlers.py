@@ -2,6 +2,7 @@ import pickle
 from typing import TYPE_CHECKING
 from ...error_handler.decorators.catch_error import catch_error, ValueExistsError, NotFoundError
 from ....address_book.record import Record
+from .helpers import format_record, parse_contact_fields
 
 
 if TYPE_CHECKING:
@@ -23,20 +24,34 @@ def parse_input(user_input) -> tuple[str, ...]:
 # Add a new contact to the dictionary
 @catch_error
 def add_contact(args, book: AddressBook)-> str:
-    name, phone, *_ = args
-    if book.phone_exists(phone):
-        raise ValueExistsError("This phone already exists in another contact")
-    
+    name = args[0]
+    fields = parse_contact_fields(args[1:])
     record = book.find(name)
 
-    if record is None:
-        record = Record(name)
+    # CASE 1: contact exists
+    if record:
+        # if no additional data
+        if "phone" not in fields:
+            return "[red]Contact already exists, add something.[/red]\n" + format_record(record)
+        # if phone provided -> update
+        phone = fields["phone"]
+        if book.phone_exists(phone):
+            raise ValueExistsError("This phone number already exists")
         record.add_phone(phone)
-        book.add_record(record)
-        return "[green]Contact added.[/green]"
-    
-    record.add_phone(phone)
-    return "[green]Contact updated.[/green]"
+        return "[green]Contact updated.[/green]\n" + format_record(record)
+
+    # CASE 2: contact does not exist
+    record = Record(name)
+
+    # CASE 2.1: with phone
+    if "phone" in fields:
+        phone = fields["phone"]
+        if book.phone_exists(phone):
+            raise ValueExistsError("This phone number already exists")
+        record.add_phone(phone)
+
+    book.add_record(record)
+    return "[green]Contact added.[/green]\n" + format_record(record)
 
 
 # Change phone number for an existing contact
@@ -99,9 +114,10 @@ def show_birthday(args, book: AddressBook) -> str:
     return f"[cyan]{record.birthday.date.strftime('%d.%m.%Y')}[/cyan]"
     
 
-@catch_error
-def birthdays(book: AddressBook) -> str:
-    birthdays_list = book.get_upcoming_birthdays()
+# @catch_error
+def birthdays(args, book: AddressBook) -> str:
+    days = int(args[0]) if args else 7
+    birthdays_list = book.get_upcoming_birthdays(days)
     result = []
     if not birthdays_list:
         return "[green]The list is empty. No celebrations, only work![/green]"

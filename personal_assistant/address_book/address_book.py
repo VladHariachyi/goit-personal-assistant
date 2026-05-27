@@ -21,9 +21,9 @@ class AddressBook(UserDict):
             raise KeyError("Contact not found")
         self.data.pop(name)
 
-    def get_upcoming_birthdays(self) -> list:
+    def get_upcoming_birthdays(self, days) -> list:
         today = datetime.today().date()
-        delta_date = today + timedelta(days=7)
+        delta_date = today + timedelta(days = days)
         congratulations_list = []
     
         for name, value in self.data.items():
@@ -37,7 +37,7 @@ class AddressBook(UserDict):
             if birthday_this_year < today:
                 birthday_this_year = birthday_this_year.replace(year=today.year + 1)
 
-            # Check if the birthday falls within the next 7 days
+            # Check if the birthday falls within the next N days
             if today <= birthday_this_year <= delta_date:
                 congratulation_date = birthday_this_year
                 # If the birthday falls on a Saturday, move it to the following Monday
