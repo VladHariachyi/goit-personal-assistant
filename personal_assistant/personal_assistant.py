@@ -1,4 +1,3 @@
-from .address_book.address_book import AddressBook
 from .notes import Notes
 from .shared.event_handler.utils import (
     parse_input, 
@@ -20,16 +19,9 @@ class PersonalAssistant:
         self.address_book = load_data()
         self.notes = Notes()
 
-    def __getstate__(self):
-        pass
-
-    def __setstate__(self, state):
-        pass     
-
-    def run(self):
+    def run(self) -> None:
         book = self.address_book
-        # print(SUCCESS + "Welcome to the assistant bot!")
-        print("Welcome to the assistant bot!")
+        print("[green]Welcome to the assistant bot![/green]")
         
         while True:
             user_input = input("Enter a command: ")
@@ -38,12 +30,10 @@ class PersonalAssistant:
             match command:
                 case "close" | "exit":
                     save_data(book)
-                    # print(SUCCESS + "Good bye!")
-                    print("Good bye!")
+                    print("[green]Good bye![/green]")
                     break
                 case "hello":
-                    # print(SUCCESS + "How can I help you?")
-                    print("How can I help you?")
+                    print("[green]How can I help you?[/green]")
                 case "add":
                     print(add_contact(args, book))
                 case "change":
@@ -59,5 +49,4 @@ class PersonalAssistant:
                 case "birthdays":
                     print(birthdays(book))
                 case _:
-                    # print(ERROR + "Invalid command.")
-                    print("Invalid command.")
+                    print("[red]Invalid command.[/red]")
