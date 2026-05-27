@@ -12,39 +12,38 @@ class Field:
         return str(self.value)
     
     
-@dataclass
 class Name(Field):
     """Contact name field."""
 
-    def __post_init__(self):
-        self.validate_required(self.value)
-        super().__post_init__()
+    def __init__(self, value: str):
+        self.validate_required(value)
+        super().__init__(value)
 
-    def validate_required(self, value: str):
+    def validate_required(self, value: str) -> None:
         if not value.strip():
-            raise ValueError("The name is required")
+            raise ValidationError("The name is required")
 
 
-@dataclass
 class Phone(Field):
     """Phone number field."""
 
-    def __post_init__(self):
-        self.value = self.value.strip()
-        self.validate(self.value)
+    def __init__(self, value: str):
+        value = value.strip()
+        self.validate(value)
+        super().__init__(value)
 
-    @staticmethod
-    def validate(value: str):
+    def validate(self, value: str) -> None:
+        """Validate phone number format (10 digits)."""
         if len(value) != 10 or not value.isdigit():
-            raise ValueError("The number must contain 10 digits")
+            raise ValidationError("The number must contain 10 digits")
 
 
 class Birthday(Field):
     """The birthday class definition, responsible for saving and validating the birthday date"""
+    DATE_FORMAT: str = "%d.%m.%Y"
+
     def __init__(self, value):
         try:
-            date = datetime.strptime(value, "%d.%m.%Y")
-            self.date = date
+            self.date = datetime.strptime(value, self.DATE_FORMAT)
         except ValueError:
             raise ValidationError("Invalid date format. Please use DD.MM.YYYY")
-

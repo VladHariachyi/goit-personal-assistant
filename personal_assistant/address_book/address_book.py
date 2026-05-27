@@ -3,24 +3,25 @@ from datetime import datetime, timedelta
 from .record import Record
 from ..shared.error_handler.decorators import ValueExistsError
 
+
 class AddressBook(UserDict):
     """Dictionary-based address book storage."""
         
-    def add_record(self, record: Record):
+    def add_record(self, record: Record) -> None:
         name = record.name.value
         if self.find(name):
             raise ValueExistsError("Contact already exists")
         self.data[name] = record
 
-    def find(self, name: str):
+    def find(self, name: str) -> Record | None:
         return self.data.get(name)
         
-    def delete(self, name: str):
+    def delete(self, name: str) -> None:
         if not self.find(name):
             raise KeyError("Contact not found")
         self.data.pop(name)
 
-    def get_upcoming_birthdays(self):
+    def get_upcoming_birthdays(self) -> list:
         today = datetime.today().date()
         delta_date = today + timedelta(days=7)
         congratulations_list = []
@@ -50,8 +51,6 @@ class AddressBook(UserDict):
                     "name": name,
                     "congratulation_date": congratulation_date.strftime("%d.%m.%Y")
                 })
-        if not congratulations_list:
-            return "The list is empty. No celebrations, only work!"
         return congratulations_list
     
     def phone_exists(self, phone: str) -> bool:
@@ -60,10 +59,3 @@ class AddressBook(UserDict):
                 if p.value == phone:
                     return True
         return False
-
-    def __str__(self):
-        return (
-        f"[green]Name:[/green] [cyan]{self.name.value}[/cyan][green]; [/green]"
-        f"[green]Phones:[/green] [cyan]{', '.join(p.value for p in self.phones) if self.phones else 'No phones'}[/cyan][green]; [/green]"
-        f"[green]Birthday:[/green] [cyan]{self.birthday.date.strftime('%d.%m.%Y') if self.birthday else 'No birthday'}[/cyan]"
-    )

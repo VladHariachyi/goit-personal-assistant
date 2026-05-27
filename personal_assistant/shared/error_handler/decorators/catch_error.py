@@ -17,7 +17,6 @@ def catch_error(func: Callable) -> Callable:
             return f"[red]Oops.. Contact was not found.[/red]"
         except IndexError:
             return f"[red]Oops.. Give me the name please."
-
     return inner
 
 
