@@ -1,4 +1,5 @@
 from functools import wraps
+from typing import Callable
 
 from errors import (
     AddressBookError,
@@ -7,11 +8,11 @@ from errors import (
 )
 
 
-def catch_error(func):
+def catch_error(func: Callable) -> Callable:
     @wraps(func)
     def wrapper(*args, **kwargs):
         try:
-            return callback(*args, **kwargs)
+            return func(*args, **kwargs)
         except (AddressBookError, NotesError, InputError) as error:
             print(f"[red]{error}[/red]")
         except KeyError as missed_key:
