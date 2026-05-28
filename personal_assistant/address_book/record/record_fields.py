@@ -1,3 +1,4 @@
+import re
 from dataclasses import dataclass
 from datetime import datetime
 from ...shared.error_handler.decorators.catch_error import ValidationError
@@ -26,16 +27,26 @@ class Name(Field):
 
 class Phone(Field):
     """Phone number field."""
-
+    PHONE_PATTERN = r"^\+380\d{9}$"
     def __init__(self, value: str):
         value = value.strip()
         self.validate(value)
         super().__init__(value)
 
-    def validate(self, value: str) -> None:
-        """Validate phone number format (10 digits)."""
-        if len(value) != 10 or not value.isdigit():
-            raise ValidationError("The number must contain 10 digits")
+    @staticmethod
+    def validate(value: str) -> None:
+        """
+        Validate Ukrainian phone format:
+        +380XXXXXXXXX
+        """
+
+        if not re.fullmatch(
+            Phone.PHONE_PATTERN,
+            value
+        ):
+            raise ValidationError(
+                "Phone number must be in format +380XXXXXXXXX"
+            )
 
 
 class Birthday(Field):
