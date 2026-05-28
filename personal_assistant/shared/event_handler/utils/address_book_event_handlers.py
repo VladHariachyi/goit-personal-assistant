@@ -41,7 +41,7 @@ def add_contact(args, book: AddressBook)-> str:
 
 # Change phone number for an existing contact
 @catch_error
-def change_contact(args, book: AddressBook) -> str:
+def change_phone(args, book: AddressBook) -> str:
     name, old_phone, new_phone, *_ = args
     record = book.find(name)
 
@@ -104,7 +104,7 @@ def birthdays(book: AddressBook) -> str:
     birthdays_list = book.get_upcoming_birthdays()
     result = []
     if not birthdays_list:
-        return "The list is empty. No celebrations, only work!"
+        return "[green]The list is empty. No celebrations, only work![/green]"
     for user in birthdays_list:
         result.append(
             f"Name: [cyan]{user['name']}[/cyan], congratulation date: [cyan]{user['congratulation_date']}[/cyan]"
