@@ -26,18 +26,30 @@ def parse_input(user_input) -> tuple[str, ...]:
 def add_contact(args, book: AddressBook)-> str:
     name = args[0]
     fields = parse_contact_fields(args[1:])
+    print(fields)
     record = book.find(name)
 
     # CASE 1: contact exists
     if record:
         # if no additional data
-        if "phone" not in fields:
+        if not fields:
             return "[red]Contact already exists, add something.[/red]\n" + format_record(record)
         # if phone provided -> update
-        phone = fields["phone"]
-        if book.phone_exists(phone):
-            raise AddressBookError("This phone number already exists")
-        record.add_phone(phone)
+        if "phone" in fields:
+            phone = fields["phone"]
+            if book.phone_exists(phone):
+                raise AddressBookError("This phone number already exists")
+            record.add_phone(phone)
+        
+        if "email" in fields:
+            record.add_email(fields["email"])
+
+        if "birthday" in fields:
+            record.add_birthday(fields["birthday"])
+
+        if "address" in fields:
+            record.add_address(fields["address"])
+
         return "[green]Contact updated.[/green]\n" + format_record(record)
 
     # CASE 2: contact does not exist
@@ -49,7 +61,16 @@ def add_contact(args, book: AddressBook)-> str:
         if book.phone_exists(phone):
             raise AddressBookError("This phone number already exists")
         record.add_phone(phone)
+    
+    if "email" in fields:
+        record.add_email(fields["email"])
 
+    if "birthday" in fields:
+        record.add_birthday(fields["birthday"])
+
+    if "address" in fields:
+        record.add_address(fields["address"])
+        
     book.add_record(record)
     return "[green]Contact added.[/green]\n" + format_record(record)
 
