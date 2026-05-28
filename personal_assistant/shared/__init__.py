@@ -1,11 +1,21 @@
 from .error_handler import UserInputError, catch_error
 from .input_handler import check_input
-from .event_handler import handle_event
+from .event_handler import (
+    handle_event,
+    AddressBookEvents,
+    NotesEvents,
+    AB_DESCRIPTIONS,
+    NOTES_DESCRIPTIONS
+)
 
 
 __all__ = [
     "UserInputError",
     "catch_error",
     "check_input",
-    "handle_event"
+    "handle_event",
+    "AddressBookEvents",
+    "NotesEvents",
+    "AB_DESCRIPTIONS",
+    "NOTES_DESCRIPTIONS"
 ]

@@ -1,5 +1,6 @@
-from .address_book_events import AddressBookEvents
-from .notes_events import NotesEvents
+from ..models.address_book_events import AddressBookEvents
+from ..models.notes_events import NotesEvents
+
 
 AB_DESCRIPTIONS = {
     AddressBookEvents.ADD_CONTACT: "Create a new contact",
