@@ -1,5 +1,12 @@
+from rich import print
+from rich.console import Console
+from rich.table import Table
 from .notes import Notes
-from .shared.event_handler.utils import (
+from .shared import (
+    AddressBookEvents,
+    NotesEvents,
+    AB_DESCRIPTIONS,
+    NOTES_DESCRIPTIONS,
     parse_input, 
     load_data,
     save_data,
@@ -10,23 +17,16 @@ from .shared.event_handler.utils import (
     add_birthday,
     show_birthday,
     birthdays,
-)
-from rich import print
-from rich.console import Console
-from rich.table import Table
-from .shared import (
-    AddressBookEvents,
-    NotesEvents,
-    AB_DESCRIPTIONS,
-    NOTES_DESCRIPTIONS
-)
+    )
+
+
+console = Console()
 
 
 class PersonalAssistant:
 
     def __init__(self):
         self.notes = Notes()
-        self.console = Console()
 
     def run(self) -> None:
         book = load_data()
@@ -40,7 +40,7 @@ class PersonalAssistant:
         # --- MAIN MENU---
         table.add_row("exit / close", "Exit the program")
         table.add_row("options", "Show all available commands")
-        self.console.print(table)
+        console.print(table)
         
         while True:
             user_input = input("Enter a command: ")
@@ -128,4 +128,4 @@ class PersonalAssistant:
                 event.value,
                 NOTES_DESCRIPTIONS.get(event, "")
             )
-        self.console.print(table)
+        console.print(table)

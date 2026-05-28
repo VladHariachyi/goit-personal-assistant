@@ -1,7 +1,7 @@
 from collections import UserDict
 from datetime import datetime, timedelta
 from .record import Record
-from ..shared.error_handler.decorators import ValueExistsError
+from ..shared import AddressBookError
 
 
 class AddressBook(UserDict):
@@ -10,7 +10,7 @@ class AddressBook(UserDict):
     def add_record(self, record: Record) -> None:
         name = record.name.value
         if self.find(name):
-            raise ValueExistsError("Contact already exists")
+            raise AddressBookError("Contact already exists")
         self.data[name] = record
 
     def find(self, name: str) -> Record | None:
@@ -18,12 +18,12 @@ class AddressBook(UserDict):
         
     def delete(self, name: str) -> None:
         if not self.find(name):
-            raise KeyError("Contact not found")
+            raise AddressBookError("Oops.. Contact was not found.")
         self.data.pop(name)
 
-    def get_upcoming_birthdays(self, days) -> list:
+    def get_upcoming_birthdays(self, requested_days: int) -> list:
         today = datetime.today().date()
-        delta_date = today + timedelta(days = days)
+        delta_date = today + timedelta(days = requested_days)
         congratulations_list = []
     
         for name, value in self.data.items():

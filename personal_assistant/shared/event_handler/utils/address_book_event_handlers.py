@@ -1,6 +1,6 @@
 import pickle
 from typing import TYPE_CHECKING
-from ...error_handler.decorators.catch_error import catch_error, ValueExistsError, NotFoundError
+from ...error_handler import AddressBookError, catch_error
 from ....address_book.record import Record
 from .helpers import format_record, parse_contact_fields
 
@@ -36,7 +36,7 @@ def add_contact(args, book: AddressBook)-> str:
         # if phone provided -> update
         phone = fields["phone"]
         if book.phone_exists(phone):
-            raise ValueExistsError("This phone number already exists")
+            raise AddressBookError("This phone number already exists")
         record.add_phone(phone)
         return "[green]Contact updated.[/green]\n" + format_record(record)
 
@@ -47,7 +47,7 @@ def add_contact(args, book: AddressBook)-> str:
     if "phone" in fields:
         phone = fields["phone"]
         if book.phone_exists(phone):
-            raise ValueExistsError("This phone number already exists")
+            raise AddressBookError("This phone number already exists")
         record.add_phone(phone)
 
     book.add_record(record)
@@ -84,7 +84,7 @@ def show_phone(args, book: AddressBook) -> str:
 @catch_error
 def show_all(book: AddressBook) -> str:
     if not book:
-        raise NotFoundError("No contacts saved.")
+        raise AddressBookError("No contacts saved.")
 
     result = "\n".join(str(record) for record in book.values())
     return result
@@ -109,15 +109,15 @@ def show_birthday(args, book: AddressBook) -> str:
         raise KeyError
 
     if record.birthday is None:
-        raise NotFoundError("Birthday is not set")
+        raise AddressBookError("Birthday is not set")
 
     return f"[cyan]{record.birthday.date.strftime('%d.%m.%Y')}[/cyan]"
     
 
 # @catch_error
 def birthdays(args, book: AddressBook) -> str:
-    days = int(args[0]) if args else 7
-    birthdays_list = book.get_upcoming_birthdays(days)
+    requested_days = int(args[0]) if args else 7
+    birthdays_list = book.get_upcoming_birthdays(requested_days)
     result = []
     if not birthdays_list:
         return "[green]The list is empty. No celebrations, only work![/green]"

@@ -1,3 +1,3 @@
-from .catch_error import catch_error, ValidationError, ValueExistsError, NotFoundError
+from .error_handler import catch_error
 
-__all__ = ["catch_error", "ValidationError", "ValueExistsError", "NotFoundError"]
+__all__ = ["catch_error"]

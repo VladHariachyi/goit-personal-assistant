@@ -29,5 +29,6 @@ __all__ = [
     "load_data",
     "save_data",
     "format_record",
-    "parse_contact_fields"
+    "parse_contact_fields",
+    "add_note"
 ]
