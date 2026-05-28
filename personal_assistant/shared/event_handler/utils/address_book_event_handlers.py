@@ -1,6 +1,6 @@
 import pickle
 from typing import TYPE_CHECKING
-from ...error_handler import AddressBookError, catch_error
+from ....shared import AddressBookError, catch_error, check_input
 from ....address_book.record import Record
 from .helpers import format_record, parse_contact_fields
 
@@ -23,10 +23,10 @@ def parse_input(user_input) -> tuple[str, ...]:
 
 # Add a new contact to the dictionary
 @catch_error
+@check_input(min_args=1)
 def add_contact(args, book: AddressBook)-> str:
     name = args[0]
     fields = parse_contact_fields(args[1:])
-    print(fields)
     record = book.find(name)
 
     # CASE 1: contact exists
@@ -103,22 +103,13 @@ def show_phone(args, book: AddressBook) -> str:
 
 # Show all saved contacts
 @catch_error
-def show_all(book: AddressBook) -> str:
+@check_input(max_args=0)
+def show_all(_, book: AddressBook) -> str:
     if not book:
         raise AddressBookError("No contacts saved.")
 
     result = "\n".join(str(record) for record in book.values())
     return result
-
-
-@catch_error
-def add_birthday(args, book: AddressBook) -> str:
-    name, birthday, *_ = args
-    record = book.find(name)
-    if record is None:
-        raise KeyError
-    record.add_birthday(birthday)
-    return "[green]Birthday added[/green]"
     
 
 @catch_error
@@ -135,7 +126,8 @@ def show_birthday(args, book: AddressBook) -> str:
     return f"[cyan]{record.birthday.date.strftime('%d.%m.%Y')}[/cyan]"
     
 
-# @catch_error
+@catch_error
+@check_input(min_args=0, max_args=1)
 def birthdays(args, book: AddressBook) -> str:
     requested_days = int(args[0]) if args else 7
     birthdays_list = book.get_upcoming_birthdays(requested_days)

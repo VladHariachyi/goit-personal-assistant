@@ -82,7 +82,7 @@ class PersonalAssistant:
                 case "show_upcoming_birthdays":
                     print(birthdays(args, book))
                 case "show_all_contacts":
-                    print(show_all(book))
+                    print(show_all(args, book))
 
                 # --- NOTES ---
                 case "add_note":
