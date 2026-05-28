@@ -14,7 +14,6 @@ from .shared import (
     change_phone,
     show_phone,
     show_all,
-    add_birthday,
     show_birthday,
     birthdays,
     )
@@ -66,30 +65,24 @@ class PersonalAssistant:
                     print(show_phone(args, book))
                 case "remove_phone":
                     print("Remove phone - TODO")
-                case "add_email":
-                    print("Add email - TODO")
                 case "change_email":
                     print("Change email - TODO")
                 case "show_email":
                     print("Show email - TODO")
                 case "remove_email":
                     print("Remove email - TODO")
-                case "add_address":
-                    print("Add address - TODO")
                 case "change_address":
                     print("Change address - TODO")
                 case "show_address":
                     print("Show address - TODO")
                 case "remove_address":
                     print("Remove address - TODO")
-                case "add_birthday":
-                    print(add_birthday(args, book))
                 case "show_birthday":
                     print(show_birthday(args, book))
                 case "show_upcoming_birthdays":
                     print(birthdays(args, book))
                 case "show_all_contacts":
-                    print(show_all(book))
+                    print(show_all(args, book))
 
                 # --- NOTES ---
                 case "add_note":
@@ -108,6 +101,7 @@ class PersonalAssistant:
                     print("[red]Invalid command.[/red]")
     
     def show_options(self):
+        print('here')
         table = Table(title="Available commands", show_lines=True)
         table.add_column("Command", style="cyan")
         table.add_column("Usage", style="white")

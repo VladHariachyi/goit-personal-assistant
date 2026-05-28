@@ -1,6 +1,6 @@
 import pickle
 from typing import TYPE_CHECKING
-from ...error_handler import AddressBookError, catch_error
+from ....shared import AddressBookError, catch_error, check_input
 from ....address_book.record import Record
 from .helpers import format_record, parse_contact_fields
 
@@ -23,6 +23,7 @@ def parse_input(user_input) -> tuple[str, ...]:
 
 # Add a new contact to the dictionary
 @catch_error
+@check_input(min_args=1)
 def add_contact(args, book: AddressBook)-> str:
     name = args[0]
     fields = parse_contact_fields(args[1:])
@@ -31,13 +32,24 @@ def add_contact(args, book: AddressBook)-> str:
     # CASE 1: contact exists
     if record:
         # if no additional data
-        if "phone" not in fields:
+        if not fields:
             return "[red]Contact already exists, add something.[/red]\n" + format_record(record)
         # if phone provided -> update
-        phone = fields["phone"]
-        if book.phone_exists(phone):
-            raise AddressBookError("This phone number already exists")
-        record.add_phone(phone)
+        if "phone" in fields:
+            phone = fields["phone"]
+            if book.phone_exists(phone):
+                raise AddressBookError("This phone number already exists")
+            record.add_phone(phone)
+        
+        if "email" in fields:
+            record.add_email(fields["email"])
+
+        if "birthday" in fields:
+            record.add_birthday(fields["birthday"])
+
+        if "address" in fields:
+            record.add_address(fields["address"])
+
         return "[green]Contact updated.[/green]\n" + format_record(record)
 
     # CASE 2: contact does not exist
@@ -49,7 +61,16 @@ def add_contact(args, book: AddressBook)-> str:
         if book.phone_exists(phone):
             raise AddressBookError("This phone number already exists")
         record.add_phone(phone)
+    
+    if "email" in fields:
+        record.add_email(fields["email"])
 
+    if "birthday" in fields:
+        record.add_birthday(fields["birthday"])
+
+    if "address" in fields:
+        record.add_address(fields["address"])
+        
     book.add_record(record)
     return "[green]Contact added.[/green]\n" + format_record(record)
 
@@ -82,7 +103,8 @@ def show_phone(args, book: AddressBook) -> str:
 
 # Show all saved contacts
 @catch_error
-def show_all(book: AddressBook) -> str:
+@check_input(max_args=0)
+def show_all(_, book: AddressBook) -> str:
     if not book:
         raise AddressBookError("No contacts saved.")
 
@@ -114,7 +136,8 @@ def show_birthday(args, book: AddressBook) -> str:
     return f"[cyan]{record.birthday.date.strftime('%d.%m.%Y')}[/cyan]"
     
 
-# @catch_error
+@catch_error
+@check_input(min_args=0, max_args=1)
 def birthdays(args, book: AddressBook) -> str:
     requested_days = int(args[0]) if args else 7
     birthdays_list = book.get_upcoming_birthdays(requested_days)
