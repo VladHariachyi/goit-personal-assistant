@@ -14,7 +14,12 @@ from .shared.event_handler.utils import (
 from rich import print
 from rich.console import Console
 from rich.table import Table
-from .shared.event_handler.models import AddressBookEvents, NotesEvents, AB_DESCRIPTIONS, NOTES_DESCRIPTIONS
+from .shared import (
+    AddressBookEvents,
+    NotesEvents,
+    AB_DESCRIPTIONS,
+    NOTES_DESCRIPTIONS
+)
 
 
 class PersonalAssistant:
@@ -34,7 +39,6 @@ class PersonalAssistant:
 
         # --- MAIN MENU---
         table.add_row("exit / close", "Exit the program")
-        table.add_row("hello", "Show greeting message")
         table.add_row("options", "Show all available commands")
         self.console.print(table)
         
@@ -47,8 +51,6 @@ class PersonalAssistant:
                     save_data(book)
                     print("[green]Good bye![/green]")
                     break
-                case "hello":
-                    print("[green]How can I help you?[/green]")
                 case "options":
                     self.show_options()
                 # --- ADDRESS BOOK ---
