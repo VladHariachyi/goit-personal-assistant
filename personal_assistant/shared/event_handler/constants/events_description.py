@@ -3,36 +3,36 @@ from ..models.notes_events import NotesEvents
 
 
 AB_DESCRIPTIONS = {
-    AddressBookEvents.ADD_CONTACT: "Create a new contact",
-    AddressBookEvents.REMOVE_CONTACT: "Delete a contact",
-    AddressBookEvents.SEARCH_CONTACT: "Search contact by name or phone",
+    AddressBookEvents.ADD_CONTACT: "add_contact <name> [field=value]",
+    AddressBookEvents.REMOVE_CONTACT: "remove_contact <name>",
+    AddressBookEvents.SEARCH_CONTACT: "search <name|phone>",
 
-    AddressBookEvents.ADD_PHONE: "Add phone number to contact",
-    AddressBookEvents.CHANGE_PHONE: "Change existing phone number",
-    AddressBookEvents.SHOW_PHONE: "Show all phone numbers for contact",
-    AddressBookEvents.REMOVE_PHONE: "Remove phone number from contact",
+    AddressBookEvents.CHANGE_PHONE: "change_phone <name> <old_phone> <new_phone>",
+    AddressBookEvents.SHOW_PHONE: "show_phone <name>",
+    AddressBookEvents.REMOVE_PHONE: "remove_phone <name> <phone>",
 
-    AddressBookEvents.ADD_EMAIL: "Add email to contact",
-    AddressBookEvents.CHANGE_EMAIL: "Change contact email",
-    AddressBookEvents.SHOW_EMAIL: "Show contact email",
-    AddressBookEvents.REMOVE_EMAIL: "Remove email from contact",
+    AddressBookEvents.ADD_EMAIL: "add_email <name> <email>",
+    AddressBookEvents.CHANGE_EMAIL: "change_email <name> <email>",
+    AddressBookEvents.SHOW_EMAIL: "show_email <name>",
+    AddressBookEvents.REMOVE_EMAIL: "remove_email <name> <email>",
 
-    AddressBookEvents.ADD_ADDRESS: "Add address to contact",
-    AddressBookEvents.CHANGE_ADDRESS: "Change contact address",
-    AddressBookEvents.SHOW_ADDRESS: "Show contact address",
-    AddressBookEvents.REMOVE_ADDRESS: "Remove contact address",
+    AddressBookEvents.ADD_ADDRESS: "add_address <name> <address>",
+    AddressBookEvents.CHANGE_ADDRESS: "change_address <name> <address>",
+    AddressBookEvents.SHOW_ADDRESS: "show_address <name>",
+    AddressBookEvents.REMOVE_ADDRESS: "remove_address <name>",
 
-    AddressBookEvents.ADD_BIRTHDAY: "Add birthday to contact",
-    AddressBookEvents.SHOW_BIRTHDAY: "Show contact birthday",
-    AddressBookEvents.UPCOMING: "Show upcoming birthdays (next 7 days)",
+    AddressBookEvents.ADD_BIRTHDAY: "add_birthday <name> <DD.MM.YYYY>",
+    AddressBookEvents.SHOW_BIRTHDAY: "show_birthday <name>",
+    AddressBookEvents.UPCOMING: "birthdays [days]",
 
-    AddressBookEvents.SHOW_ALL: "Show all contacts",
+    AddressBookEvents.SHOW_ALL: "show_all",
 }
 
 NOTES_DESCRIPTIONS = {
-    NotesEvents.ADD_NOTE: "Add new note",
-    NotesEvents.ADD_TAG: "Add tag to note",
-    NotesEvents.SEARCH_NOTE: "Search notes",
-    NotesEvents.REMOVE_NOTE: "Remove note",
-    NotesEvents.CHANGE_NOTE: "Change note content",
+    NotesEvents.ADD_NOTE: "add_note <text>",
+    NotesEvents.CHANGE_NOTE: "change_note <id> <text>",
+    NotesEvents.REMOVE_NOTE: "remove_note <id>",
+
+    NotesEvents.ADD_TAG: "add_tag <id> <tag>",
+    NotesEvents.SEARCH_NOTE: "search_note <text|tag>",
 }
