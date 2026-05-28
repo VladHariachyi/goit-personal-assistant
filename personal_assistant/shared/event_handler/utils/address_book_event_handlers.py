@@ -110,6 +110,16 @@ def show_all(_, book: AddressBook) -> str:
 
     result = "\n".join(str(record) for record in book.values())
     return result
+
+
+@catch_error
+def add_birthday(args, book: AddressBook) -> str:
+    name, birthday, *_ = args
+    record = book.find(name)
+    if record is None:
+        raise KeyError
+    record.add_birthday(birthday)
+    return "[green]Birthday added[/green]"
     
 
 @catch_error
