@@ -16,7 +16,9 @@ from rich.console import Console
 from rich.table import Table
 from .shared import (
     AddressBookEvents,
-    NotesEvents, AB_DESCRIPTIONS, NOTES_DESCRIPTIONS
+    NotesEvents,
+    AB_DESCRIPTIONS,
+    NOTES_DESCRIPTIONS
 )
 
 
