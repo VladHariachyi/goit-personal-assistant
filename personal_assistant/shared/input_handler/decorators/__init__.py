@@ -1,4 +1,3 @@
-from .check_input import check_input
+from .check_input import check_input, UserInputError
 
-
-__all__ = ["check_input"]
+__all__ = ["check_input", "UserInputError"]
