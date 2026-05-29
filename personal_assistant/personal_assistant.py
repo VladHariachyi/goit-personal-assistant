@@ -6,9 +6,9 @@ from .address_book import (
     save_data,
     add_contact,
     change_contact,
-    show_phone,
+    search_contact,
+    remove_contact,
     show_all,
-    show_birthday,
     birthdays,
     AddressBookEvents,
     AB_DESCRIPTIONS
@@ -56,33 +56,16 @@ class PersonalAssistant:
                     break
                 case "options":
                     self.show_options()
+                    
                 # --- ADDRESS BOOK ---
                 case "add_contact":
                     print(add_contact(params, book))
                 case "change_contact":
                     print(change_contact(params, book))
                 case "remove_contact":
-                    print("Remove contact - TODO")
+                    print(remove_contact(params, book))
                 case "search_contact":
-                    print("Search contact - TODO")
-                case "show_phone":
-                    print(show_phone(params, book))
-                case "remove_phone":
-                    print("Remove phone - TODO")
-                case "change_email":
-                    print("Change email - TODO")
-                case "show_email":
-                    print("Show email - TODO")
-                case "remove_email":
-                    print("Remove email - TODO")
-                case "change_address":
-                    print("Change address - TODO")
-                case "show_address":
-                    print("Show address - TODO")
-                case "remove_address":
-                    print("Remove address - TODO")
-                case "show_birthday":
-                    print(show_birthday(params, book))
+                    print(search_contact(params, book))
                 case "show_upcoming_birthdays":
                     print(birthdays(params, book))
                 case "show_all_contacts":
