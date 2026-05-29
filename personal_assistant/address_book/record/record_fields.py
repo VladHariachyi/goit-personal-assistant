@@ -29,9 +29,10 @@ class Name(Field):
 class Phone(Field):
     """Phone number field."""
     PHONE_PATTERN = r"^\+380\d{9}$"
+    
     def __init__(self, value: str):
         value = value.strip()
-        self.validate(value)
+        Phone.validate(value)
         super().__init__(value)
 
     @staticmethod
@@ -41,13 +42,8 @@ class Phone(Field):
         +380XXXXXXXXX
         """
 
-        if not re.fullmatch(
-            Phone.PHONE_PATTERN,
-            value
-        ):
-            raise ValidationError(
-                "Phone number must be in format +380XXXXXXXXX"
-            )
+        if not re.fullmatch(Phone.PHONE_PATTERN,value):
+            raise AddressBookError(  "Phone number must be in format +380XXXXXXXXX")
 
 
 class Birthday(Field):
