@@ -44,6 +44,7 @@ class Birthday(Field):
     def __init__(self, value):
         try:
             self.date = datetime.strptime(value, self.DATE_FORMAT)
+            print('try birthday class', self.date)
         except ValueError:
             raise AddressBookError("Invalid date format. Please use DD.MM.YYYY")
 

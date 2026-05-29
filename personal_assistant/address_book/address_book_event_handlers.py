@@ -1,23 +1,38 @@
 import pickle
-from ..shared import AddressBookError, catch_error, check_input
+from ..shared import AddressBookError, catch_error, check_input, InputError
 from . import AddressBook, Record
+from ..address_book.record.record_fields import Birthday
+from .constants import REQUIRED_PAIRS
+from datetime import datetime
 
 def format_record(record: Record) -> str:
     return str(record)
+
+def validate_change_contact(fields: dict, pairs) -> None:
+    for old, new in pairs:
+        if old in fields or new in fields:
+            if (old in fields) != (new in fields):
+                raise InputError(f"Both {old} and {new} must be provided.")
+
+
 
 
 # Add a new contact to the dictionary
 @catch_error
 @check_input(min_args=1)
 def add_contact(fields: dict[str], book: AddressBook)-> str:
+    
     name = fields.get("name")
-    record = book.find(name)
 
+    if not name:
+        raise InputError(f"Incorrect input. Please use 'options' to see available commands and correct format.")
+    record = book.find(name)
+    
     # CASE 1: contact exists
     if record:
         # if no additional data
-        if not fields:
-            return "[red]Contact already exists, add something.[/red]\n" + format_record(record)
+        if not any(key != "name" for key in fields):
+            raise AddressBookError("Contact already exists, add something.\n"+ format_record(record))
         # if phone provided -> update
         if "phone" in fields:
             phone = fields["phone"]
@@ -61,15 +76,59 @@ def add_contact(fields: dict[str], book: AddressBook)-> str:
 
 # Change phone number for an existing contact
 @catch_error
-def change_phone(args, book: AddressBook) -> str:
-    name, old_phone, new_phone, *_ = args
+@check_input(min_args=2)
+def change_contact(fields: dict[str], book: AddressBook) -> str:
+    name = fields.get("name")
+    if not name:
+        raise InputError("Name is required. Use: change_contact name=<name> ...")
     record = book.find(name)
 
     if not record:
-        raise KeyError
+        raise AddressBookError("Contact doesn't exist, please create the contact first.")
     
-    record.edit_phone(old_phone, new_phone)
-    return "[green]Contact updated.[/green]"
+    validate_change_contact(fields, REQUIRED_PAIRS)
+    updated_fields = []
+
+    change_config = {
+        "name": {
+            "field": "new_name",
+            "validate": lambda: record.validate_name_change(fields["new_name"]),
+            "change": lambda: (record.change_name(fields["new_name"]),book.rename_record(name, fields["new_name"])),
+        },
+        "phone": {
+            "field": "new_phone",
+            "validate": lambda: record.validate_phone_change(fields["old_phone"],fields["new_phone"]),
+            "change": lambda: record.change_phone(fields["old_phone"],fields["new_phone"]),
+        },
+        "email": {
+            "field": "new_email",
+            "validate": lambda: record.validate_email_change(fields["old_email"],fields["new_email"]),
+            "change": lambda: record.change_email(fields["old_email"],fields["new_email"]),
+        },
+        "birthday": {
+            "field": "new_birthday",
+            "validate": lambda: record.validate_birthday_change(fields["old_birthday"],fields["new_birthday"]),
+            "change": lambda: record.change_birthday(fields["new_birthday"]),
+        },
+        "address": {
+            "field": "new_address",
+            "validate": lambda: record.validate_address_change(fields["old_address"],fields["new_address"]),
+            "change": lambda: record.change_address(fields["new_address"]),
+        },
+    }
+
+    # VALIDATION
+    for field_name, config in change_config.items():
+        if config["field"] in fields:
+            config["validate"]()
+
+    # UPDATE
+    for field_name, config in change_config.items():
+        if config["field"] in fields:
+            config["change"]()
+            updated_fields.append(field_name)
+
+    return f"[green]Contact updated successfully: {', '.join(updated_fields)}.[/green]\n" + format_record(record)
 
 
 # Show phone number for a specific contact
@@ -94,16 +153,6 @@ def show_all(_, book: AddressBook) -> str:
 
     result = "\n".join(str(record) for record in book.values())
     return result
-
-
-@catch_error
-def add_birthday(args, book: AddressBook) -> str:
-    name, birthday, *_ = args
-    record = book.find(name)
-    if record is None:
-        raise KeyError
-    record.add_birthday(birthday)
-    return "[green]Birthday added[/green]"
     
 
 @catch_error

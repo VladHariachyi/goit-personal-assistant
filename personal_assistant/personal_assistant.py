@@ -6,7 +6,7 @@ from .address_book import (
     load_data,
     save_data,
     add_contact,
-    change_phone,
+    change_contact,
     show_phone,
     show_all,
     show_birthday,
@@ -57,12 +57,12 @@ class PersonalAssistant:
                 # --- ADDRESS BOOK ---
                 case "add_contact":
                     print(add_contact(params, book))
+                case "change_contact":
+                    print(change_contact(params, book))
                 case "remove_contact":
                     print("Remove contact - TODO")
                 case "search_contact":
                     print("Search contact - TODO")
-                case "change_phone":
-                    print(change_phone(params, book))
                 case "show_phone":
                     print(show_phone(params, book))
                 case "remove_phone":
