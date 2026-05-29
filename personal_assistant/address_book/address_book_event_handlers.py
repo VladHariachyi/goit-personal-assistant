@@ -1,39 +1,31 @@
 import pickle
-from typing import TYPE_CHECKING
-from ....shared import AddressBookError, catch_error, check_input, InputError
-from ....address_book.record import Record
-from ....address_book.record.record_fields import Birthday
-from .helpers import format_record, parse_contact_fields, validate_change_contact
-from ..constants import REQUIRED_PAIRS
+from ..shared import AddressBookError, catch_error, check_input, InputError
+from . import AddressBook, Record
+from ..address_book.record.record_fields import Birthday
+from .constants import REQUIRED_PAIRS
 from datetime import datetime
 
+def format_record(record: Record) -> str:
+    return str(record)
 
-if TYPE_CHECKING:
-    from ....address_book.address_book import AddressBook
+def validate_change_contact(fields: dict, pairs) -> None:
+    for old, new in pairs:
+        if old in fields or new in fields:
+            if (old in fields) != (new in fields):
+                raise InputError(f"Both {old} and {new} must be provided.")
 
 
-# Parse user input into command and arguments
-def parse_input(user_input) -> tuple[str, ...]:
-    parts = user_input.split()
-
-    if not parts:
-        return "", []
-    
-    cmd, *args = parts
-    cmd = cmd.strip().lower()
-    return cmd, *args
 
 
 # Add a new contact to the dictionary
 @catch_error
 @check_input(min_args=1)
-def add_contact(args, book: AddressBook)-> str:
-    fields = parse_contact_fields(args)
-
-    if not "name" in fields:
-        raise InputError(f"Incorrect input. Please use 'options' to see available commands and correct format.")
+def add_contact(fields: dict[str], book: AddressBook)-> str:
     
-    name = fields["name"]
+    name = fields.get("name")
+
+    if not name:
+        raise InputError(f"Incorrect input. Please use 'options' to see available commands and correct format.")
     record = book.find(name)
     
     # CASE 1: contact exists
@@ -85,11 +77,10 @@ def add_contact(args, book: AddressBook)-> str:
 # Change phone number for an existing contact
 @catch_error
 @check_input(min_args=2)
-def change_contact(args, book: AddressBook) -> str:
-    fields = parse_contact_fields(args)
-    if "name" not in fields:
+def change_contact(fields: dict[str], book: AddressBook) -> str:
+    name = fields.get("name")
+    if not name:
         raise InputError("Name is required. Use: change_contact name=<name> ...")
-    name = fields["name"]
     record = book.find(name)
 
     if not record:
@@ -200,7 +191,7 @@ def save_data(book, filename="addressbook.pkl") -> None:
 
 
 def load_data(filename="addressbook.pkl") -> AddressBook:
-    from ....address_book.address_book import AddressBook
+    from .address_book import AddressBook
     try:
         with open(filename, "rb") as f:
             return pickle.load(f)

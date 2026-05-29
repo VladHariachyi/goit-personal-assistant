@@ -1,29 +1,7 @@
 from .error_handler import catch_error, AddressBookError, NotesError, InputError
 from .input_handler import check_input
-from .event_handler import (
-    handle_event,
-    AddressBookEvents,
-    NotesEvents,
-    AB_DESCRIPTIONS,
-    NOTES_DESCRIPTIONS,
-    REQUIRED_PAIRS,
-    parse_contact_fields, 
-    format_record,
-    is_address_book_event,
-    is_notes_event,
-    parse_input, 
-    add_contact, 
-    change_contact, 
-    show_phone, 
-    show_all, 
-    show_birthday, 
-    birthdays,
-    load_data,
-    save_data,
-    format_record,
-    parse_contact_fields,
-    add_note
-    )
+from .models import Field
+from .utils import parse_input
 
 
 __all__ = [
@@ -33,25 +11,6 @@ __all__ = [
     "InputError",
     "check_input",
     "handle_event", 
-    "AddressBookEvents", 
-    "NotesEvents", 
-    "AB_DESCRIPTIONS", 
-    "NOTES_DESCRIPTIONS",
-    "REQUIRED_PAIRS",
-    "parse_contact_fields", 
-    "format_record",
-    "is_address_book_event",
-    "is_notes_event",
-    "parse_input", 
-    "add_contact", 
-    "change_contact", 
-    "show_phone", 
-    "show_all", 
-    "show_birthday", 
-    "birthdays",
-    "load_data",
-    "save_data",
-    "format_record",
-    "parse_contact_fields",
-    "add_note"
+    "Field",
+    "parse_input"
 ]

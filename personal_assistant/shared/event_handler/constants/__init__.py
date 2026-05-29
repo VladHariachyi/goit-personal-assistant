@@ -1,8 +1,0 @@
-from .events_description import AB_DESCRIPTIONS, NOTES_DESCRIPTIONS, REQUIRED_PAIRS
-
-
-__all__ = [
-    "AB_DESCRIPTIONS",
-    "NOTES_DESCRIPTIONS",
-    "REQUIRED_PAIRS"
-    ]

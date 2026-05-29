@@ -1,5 +1,4 @@
-from ..models.address_book_events import AddressBookEvents
-from ..models.notes_events import NotesEvents
+from ..models import AddressBookEvents
 
 
 AB_DESCRIPTIONS = {
@@ -21,15 +20,6 @@ AB_DESCRIPTIONS = {
     AddressBookEvents.UPCOMING: "birthdays [days]",
 
     AddressBookEvents.SHOW_ALL: "show_all",
-}
-
-NOTES_DESCRIPTIONS = {
-    NotesEvents.ADD_NOTE: "add_note <text>",
-    NotesEvents.CHANGE_NOTE: "change_note <id> <text>",
-    NotesEvents.REMOVE_NOTE: "remove_note <id>",
-
-    NotesEvents.ADD_TAG: "add_tag <id> <tag>",
-    NotesEvents.SEARCH_NOTE: "search_note <text|tag>",
 }
 
 REQUIRED_PAIRS = [
