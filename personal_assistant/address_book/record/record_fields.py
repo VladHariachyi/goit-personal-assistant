@@ -1,7 +1,8 @@
 import re
 from dataclasses import dataclass
 from datetime import datetime
-from ...shared.error_handler.decorators.catch_error import ValidationError
+import re
+from ...shared import AddressBookError
 
 
 @dataclass
@@ -22,7 +23,7 @@ class Name(Field):
 
     def validate_required(self, value: str) -> None:
         if not value.strip():
-            raise ValidationError("The name is required")
+            raise AddressBookError("The name is required")
 
 
 class Phone(Field):
@@ -57,4 +58,31 @@ class Birthday(Field):
         try:
             self.date = datetime.strptime(value, self.DATE_FORMAT)
         except ValueError:
-            raise ValidationError("Invalid date format. Please use DD.MM.YYYY")
+            raise AddressBookError("Invalid date format. Please use DD.MM.YYYY")
+
+
+class Email(Field):
+    """Email field."""
+
+    def __init__(self, value: str):
+        value = value.strip()
+        self.validate(value)
+        super().__init__(value)
+
+    def validate(self, value: str) -> None:
+        EMAIL_REGEX = re.compile(r"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$")
+        if not EMAIL_REGEX.match(value):
+            raise AddressBookError("Invalid email format")
+        
+
+class Address(Field):
+    """Address field."""
+
+    def __init__(self, value: str):
+        value = value.strip()
+        self.validate(value)
+        super().__init__(value)
+
+    def validate(self, value: str) -> None:
+        if not re.search(r"[A-Za-zА-Яа-я]", value):
+            raise AddressBookError("Address must contain letters")

@@ -2,4 +2,19 @@ from enum import Enum
 
 
 class AddressBookEvents(Enum):
-  ADD_CONTACT = "add_contact"
+    ADD_CONTACT = "add_contact"
+    REMOVE_CONTACT = "remove_contact"
+    SEARCH_CONTACT = "search_contact"
+    CHANGE_PHONE = "change_phone"
+    SHOW_PHONE = "show_phone"
+    REMOVE_PHONE = "remove_phone"
+    CHANGE_EMAIL = "change_email"
+    SHOW_EMAIL = "show_email"
+    REMOVE_EMAIL = "remove_email"
+    CHANGE_ADDRESS = "change_address"
+    SHOW_ADDRESS = "show_address"
+    REMOVE_ADDRESS = "remove_address"
+    SHOW_BIRTHDAY = "show_birthday"
+    UPCOMING = "show_upcoming_birthdays"
+    SHOW_ALL = "show_all_contacts"
+    

@@ -1,5 +1,4 @@
-from ..models.address_book_events import AddressBookEvents
-from ..models.notes_events import NotesEvents
+from ..models import NotesEvents, AddressBookEvents
 
 
 def is_address_book_event(event: str) -> bool:
