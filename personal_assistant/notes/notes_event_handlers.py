@@ -4,6 +4,7 @@ from .notes import Notes
 
 
 def add_note_props(note: Note, props: dict[str, str]) -> None:
+    print("aaa", props)
     for prop, value in props.items():
         if (prop == "description"):
             note.add_description(value)
@@ -51,4 +52,4 @@ def add_note(fields: dict[str], notes: Notes) -> str:
         add_note_props(note, fields)
         notes.add_note(note)
 
-        return f"[green]Note added.[/green]\n{str(note)}"
+        return f"[green]Note added.[/green]\n {str(note)}"

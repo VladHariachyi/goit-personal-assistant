@@ -70,10 +70,13 @@ class Tag(Field):
     def __init__(self, text: str) -> None:
         NoteFieldValidation.validate(
             value = text,
-            required_message = "",
-            range_message = "",
-            pattern_message = "",
-            max_text_lenght = 100,
-            pattern = ""
+            required_message = "The note tag could not be empty",
+            range_message = (
+                "The note tag is too big, the max allowed characters" 
+                f"is {NoteFieldValidation.max_range_text_placeholder}"
+            ),
+            pattern_message = "The note tag should be in following format: '#tag_text'",
+            max_text_lenght = 30,
+            pattern = r"^#\w+"
         )
         super().__init__(text)

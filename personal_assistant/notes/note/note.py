@@ -17,15 +17,26 @@ class Note:
         self.tags = [Tag(t) for t in tags] if tags else []
 
     def __str__(self):
-        fomatted_description = self.__format_list_text_entity(self.__get_descriptions_text())
-        fomatted_tags = self.__format_list_text_entity(self.__get_tags_text())
+        formatted_description = self.__format_list_text_entity(self.__get_descriptions_text())
+        formatted_tags = self.__format_list_text_entity(self.__get_tags_text())
+
+        desctription_text = (
+            f"[cyan]{'\n'.join(formatted_description)}[/cyan]" 
+            if len(formatted_description) 
+            else "[yellow3]Empty[/yellow3]"
+        )
+        tags_text = (
+            f"[cyan]{'\n'.join(formatted_tags)}[/cyan]" 
+            if len(formatted_tags) 
+            else "[yellow3]Empty[/yellow3]"
+        )
 
         return (
             f"[green]Title: [/green][cyan]{self.title}[/cyan]"
             f"\n[green]Descriptions[/green]\n"
-            f"[cyan]{'\n'.join(fomatted_description)}[/cyan]"
+            f"{desctription_text}"
             f"\n[green]Tags[/green]\n"
-            f"[cyan]{'\n'.join(fomatted_tags)}[/cyan]"
+            f"{tags_text}"
         )
 
     def add_description(self, text: str) -> None:
@@ -62,17 +73,29 @@ class Note:
     def find_descriptions(self, search_term: str) -> list[Description] | None:
         return self.__find_by_text_value(search_term, self.descriptions)
     
-    def add_tag(self, tag: str) -> None:
-        # TODO
-        pass
+    def add_tag(self, text: str) -> None:
+        is_exist = text in self.__get_tags_text()
+
+        if is_exist:
+            raise NotesError("The tag is already exist")
+
+        tag = Tag(text)
+        self.tags.append(tag)
 
     def edit_tag(self, old_tag: str, new_tag: str) -> None:
-        # TODO
-        pass
+        is_exist = new_tag in self.__get_tags_text()
+
+        if is_exist:
+            raise NotesError("The tag is already exists")
+        
+        found_tag_index = self.__get_tag_index(old_tag)
+        
+        self.tags[found_tag_index] = Tag(new_tag)
 
     def remove_tag(self, tag: str) -> None:
-        # TODO
-        pass
+        found_tag_index = self.__get_tag_index(tag)
+
+        self.tags.pop(found_tag_index)
 
     def find_tags(self, search_term: str) -> list[Tag] | None:
         return self.__find_by_text_value(search_term, self.tags)
@@ -86,7 +109,7 @@ class Note:
         return [d.value for d in self.descriptions]
     
     def __get_tags_text(self) -> list[str]:
-        return [d.value for d in self.tags]
+        return [t.value for t in self.tags]
     
     def __get_description_index(self, description: str) -> int | None:
         found_description_index = None
@@ -97,6 +120,16 @@ class Note:
             raise NotesError(f"The description is not found: '{description}'")
         
         return found_description_index
+    
+    def __get_tag_index(self, tag: str) -> int | None:
+        found_tag_index = None
+
+        try:
+           found_tag_index = self.tags.index(tag) 
+        except:
+            raise NotesError(f"The tag is not found: '{tag}'")
+        
+        return found_tag_index
     
     def __format_list_text_entity(self, list: list[str]) -> list[str]:
         return [f"- {item}" for item in list]
