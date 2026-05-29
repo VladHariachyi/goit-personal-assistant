@@ -2,12 +2,7 @@ from rich import print
 from rich.console import Console
 from rich.table import Table
 from .notes import Notes
-from .shared import (
-    AddressBookEvents,
-    NotesEvents,
-    AB_DESCRIPTIONS,
-    NOTES_DESCRIPTIONS,
-    parse_input, 
+from .address_book import (
     load_data,
     save_data,
     add_contact,
@@ -16,8 +11,15 @@ from .shared import (
     show_all,
     show_birthday,
     birthdays,
-    )
-
+    AddressBookEvents,
+    AB_DESCRIPTIONS
+)
+from .notes import (
+    NotesEvents,
+    NOTES_DESCRIPTIONS,
+    add_note
+)
+from .shared import parse_input
 
 console = Console()
 
@@ -43,7 +45,7 @@ class PersonalAssistant:
         
         while True:
             user_input = input("Enter a command: ")
-            command, *args = parse_input(user_input)
+            command, params = parse_input(user_input)
 
             match command:
                 case "exit" | "close":
@@ -54,15 +56,15 @@ class PersonalAssistant:
                     self.show_options()
                 # --- ADDRESS BOOK ---
                 case "add_contact":
-                    print(add_contact(args, book))
+                    print(add_contact(params, book))
                 case "remove_contact":
                     print("Remove contact - TODO")
                 case "search_contact":
                     print("Search contact - TODO")
                 case "change_phone":
-                    print(change_phone(args, book))
+                    print(change_phone(params, book))
                 case "show_phone":
-                    print(show_phone(args, book))
+                    print(show_phone(params, book))
                 case "remove_phone":
                     print("Remove phone - TODO")
                 case "change_email":
@@ -78,17 +80,15 @@ class PersonalAssistant:
                 case "remove_address":
                     print("Remove address - TODO")
                 case "show_birthday":
-                    print(show_birthday(args, book))
+                    print(show_birthday(params, book))
                 case "show_upcoming_birthdays":
-                    print(birthdays(args, book))
+                    print(birthdays(params, book))
                 case "show_all_contacts":
-                    print(show_all(args, book))
+                    print(show_all(params, book))
 
                 # --- NOTES ---
                 case "add_note":
-                    print("Add note - TODO")
-                case "add_tag":
-                    print("Add tag - TODO")
+                    print(add_note(params, self.notes))
                 case "search_note":
                     print("Search note - TODO")
                 case "remove_note":

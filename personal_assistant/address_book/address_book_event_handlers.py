@@ -1,32 +1,16 @@
 import pickle
-from typing import TYPE_CHECKING
-from ....shared import AddressBookError, catch_error, check_input
-from ....address_book.record import Record
-from .helpers import format_record, parse_contact_fields
+from ..shared import AddressBookError, catch_error, check_input
+from . import AddressBook, Record
 
-
-if TYPE_CHECKING:
-    from ....address_book.address_book import AddressBook
-
-
-# Parse user input into command and arguments
-def parse_input(user_input) -> tuple[str, ...]:
-    parts = user_input.split()
-
-    if not parts:
-        return "", []
-    
-    cmd, *args = parts
-    cmd = cmd.strip().lower()
-    return cmd, *args
+def format_record(record: Record) -> str:
+    return str(record)
 
 
 # Add a new contact to the dictionary
 @catch_error
 @check_input(min_args=1)
-def add_contact(args, book: AddressBook)-> str:
-    name = args[0]
-    fields = parse_contact_fields(args[1:])
+def add_contact(fields: dict[str], book: AddressBook)-> str:
+    name = fields.get("name")
     record = book.find(name)
 
     # CASE 1: contact exists
@@ -158,7 +142,7 @@ def save_data(book, filename="addressbook.pkl") -> None:
 
 
 def load_data(filename="addressbook.pkl") -> AddressBook:
-    from ....address_book.address_book import AddressBook
+    from .address_book import AddressBook
     try:
         with open(filename, "rb") as f:
             return pickle.load(f)
