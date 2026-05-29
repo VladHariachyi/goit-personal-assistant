@@ -1,18 +1,9 @@
 import re
-from dataclasses import dataclass
 from datetime import datetime
-import re
-from ...shared import AddressBookError
 
+from ...shared.models import Field
+from ...shared.error_handler import AddressBookError 
 
-@dataclass
-class Field:
-    """The data field definition"""
-    value: str
-
-    def __str__(self) -> str:
-        return str(self.value)
-    
     
 class Name(Field):
     """Contact name field."""
