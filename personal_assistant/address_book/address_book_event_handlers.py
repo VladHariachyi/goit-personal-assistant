@@ -1,9 +1,7 @@
 import pickle
 from ..shared import AddressBookError, catch_error, check_input, InputError
 from . import AddressBook, Record
-from ..address_book.record.record_fields import Birthday
-from .constants import REQUIRED_PAIRS
-from datetime import datetime
+from .constants import REQUIRED_PAIRS, SEARCH_FILTERS
 
 def format_record(record: Record) -> str:
     return str(record)
@@ -13,8 +11,6 @@ def validate_change_contact(fields: dict, pairs) -> None:
         if old in fields or new in fields:
             if (old in fields) != (new in fields):
                 raise InputError(f"Both {old} and {new} must be provided.")
-
-
 
 
 # Add a new contact to the dictionary
@@ -35,13 +31,18 @@ def add_contact(fields: dict[str], book: AddressBook)-> str:
             raise AddressBookError("Contact already exists, add something.\n"+ format_record(record))
         # if phone provided -> update
         if "phone" in fields:
-            phone = fields["phone"]
-            if book.phone_exists(phone):
-                raise AddressBookError("This phone number already exists")
-            record.add_phone(phone)
+            phones = [p.strip() for p in fields["phone"].split(",")]
+            for phone in phones:
+                if book.phone_exists(phone):
+                    raise AddressBookError("This phone number already exists")
+                record.add_phone(phone)
         
         if "email" in fields:
-            record.add_email(fields["email"])
+            emails = [p.strip() for p in fields["email"].split(",")]
+            for email in emails:
+                if book.email_exists(email):
+                    raise AddressBookError("This email already exists")
+                record.add_email(fields["email"])
 
         if "birthday" in fields:
             record.add_birthday(fields["birthday"])
@@ -129,6 +130,84 @@ def change_contact(fields: dict[str], book: AddressBook) -> str:
             updated_fields.append(field_name)
 
     return f"[green]Contact updated successfully: {', '.join(updated_fields)}.[/green]\n" + format_record(record)
+
+@catch_error
+@check_input(min_args=1)
+def search_contact(fields: dict[str], book: AddressBook) -> str:
+    results = list(book.data.values())
+
+    for field, query in fields.items():
+
+        if field not in SEARCH_FILTERS:
+            raise InputError(f"Unknown search field: {field}")
+
+        results = [
+            record for record in results
+            if SEARCH_FILTERS[field](record, query)
+        ]
+
+    if not results:
+        raise AddressBookError("No contacts found")
+
+    return "\n\n".join(
+        format_record(record)
+        for record in results
+    )
+
+
+@catch_error
+@check_input(min_args=1)
+def remove_contact(fields: dict[str], book: AddressBook) -> str:
+    if "name" not in fields:
+        raise InputError("Name is required")
+
+    name = fields["name"]
+    record = book.find(name)
+
+    if not record:
+        raise AddressBookError("Contact doesn't exist")
+
+    removed = []
+
+    # =========================
+    # DELETE WHOLE CONTACT
+    # =========================
+    if len(fields) == 1:
+        book.delete(name)
+        return f"Contact '{name}' removed"
+
+    # =========================
+    # DELETE PHONE
+    # =========================
+    if "phone" in fields:
+        record.remove_phone(fields["phone"])
+        removed.append("phone")
+
+    # =========================
+    # DELETE EMAIL
+    # =========================
+    if "email" in fields:
+        record.remove_email(fields["email"])
+        removed.append("email")
+
+    # =========================
+    # DELETE BIRTHDAY
+    # =========================
+    if "birthday" in fields:
+        record.birthday = None
+        removed.append("birthday")
+
+    # =========================
+    # DELETE ADDRESS
+    # =========================
+    if "address" in fields:
+        record.address = None
+        removed.append("address")
+
+    if not removed:
+        raise InputError("Nothing to remove")
+
+    return f"Removed: {', '.join(removed)}"
 
 
 # Show phone number for a specific contact

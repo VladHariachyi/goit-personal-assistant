@@ -63,3 +63,10 @@ class AddressBook(UserDict):
                 if p.value == phone:
                     return True
         return False
+    
+    def email_exists(self, email: str) -> bool:
+        for record in self.data.values():
+            for p in record.emails:
+                if p.value == email:
+                    return True
+        return False

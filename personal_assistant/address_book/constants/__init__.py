@@ -1,4 +1,4 @@
-from .events_description import AB_DESCRIPTIONS, REQUIRED_PAIRS
+from .events_description import AB_DESCRIPTIONS, REQUIRED_PAIRS, SEARCH_FILTERS
 
 
-__all__ = ["AB_DESCRIPTIONS", "REQUIRED_PAIRS"]
+__all__ = ["AB_DESCRIPTIONS", "REQUIRED_PAIRS", "SEARCH_FILTERS"]
