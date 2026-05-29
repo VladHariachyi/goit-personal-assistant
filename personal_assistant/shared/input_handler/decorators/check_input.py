@@ -6,7 +6,7 @@ from ...error_handler import InputError
 def check_input(*required_args, min_args: int = None, max_args: int = None) -> Callable:
     def decorator(callback: Callable) -> Callable:
         @wraps(callback)
-        def wrapper(args, book):
+        def wrapper(args: dict[str], book):
             actual_count = len(args)
 
             # STRICT mode

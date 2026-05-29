@@ -115,7 +115,7 @@ class Note:
         found_description_index = None
 
         try:
-           found_description_index = self.descriptions.index(description) 
+           found_description_index = [d.value for d in self.descriptions].index(description) 
         except:
             raise NotesError(f"The description is not found: '{description}'")
         
@@ -125,7 +125,7 @@ class Note:
         found_tag_index = None
 
         try:
-           found_tag_index = self.tags.index(tag) 
+           found_tag_index = [t.value for t in self.tags].index(tag) 
         except:
             raise NotesError(f"The tag is not found: '{tag}'")
         
