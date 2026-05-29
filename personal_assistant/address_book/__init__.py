@@ -19,7 +19,6 @@ __all__ = [
     "AddressBook",
     "Record",
     "add_contact", 
-    "change_phone", 
     "change_contact",
     "search_contact",
     "remove_contact",
