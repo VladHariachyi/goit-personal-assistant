@@ -13,6 +13,10 @@ class AddressBook(UserDict):
             raise AddressBookError("Contact already exists")
         self.data[name] = record
 
+    def rename_record(self, old_name: str, new_name: str):
+        record = self.data.pop(old_name)
+        self.data[new_name] = record
+
     def find(self, name: str) -> Record | None:
         return self.data.get(name)
         

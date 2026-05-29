@@ -12,8 +12,12 @@ class Record():
         self.birthday = None
         self.address = None
 
-    def change_contact_name(self, name: str) -> None:
-        pass
+    def validate_name_change(self, new_name: str):
+        if self.name.value == new_name:
+            raise AddressBookError("Nothing to update: names are identical.")
+    
+    def change_name(self, new_name: str) -> None:
+        self.name = Name(new_name)
 
     def add_phone(self, value: str) -> None:
         if any(phone.value == value for phone in self.phones):
@@ -23,10 +27,16 @@ class Record():
     def remove_phone(self, value: str) -> None:
         phone = self.find_phone(value)
         self.phones.remove(phone)
-
-    def edit_phone(self, old_number: str, new_number: str) -> None:
+    
+    def validate_phone_change(self, old_number: str, new_number: str):
         if old_number == new_number:
             raise AddressBookError("New phone must be different from old phone")
+        if new_number in [p.value for p in self.phones]:
+            raise AddressBookError("The new phone number already exists.")
+        if not self.find_phone(old_number):
+            raise AddressBookError("Nothing to update: please check the old number.")
+    
+    def change_phone(self, old_number: str, new_number: str) -> None:
         old_phone = self.find_phone(old_number)
         new_phone = Phone(new_number)
         index = self.phones.index(old_phone)
@@ -53,13 +63,20 @@ class Record():
                 return email
         raise AddressBookError("Email not found")
     
-    def edit_email(self, old_value: str, new_value: str) -> None:
-        if old_value == new_value:
-            raise AddressBookError("New email must be different from old email")
+    def change_email(self, old_value: str, new_value: str) -> None:
         old_email = self.find_email(old_value)
         new_email = Email(new_value)
         index = self.emails.index(old_email)
         self.emails[index] = new_email
+
+    def validate_email_change(self, old_value: str, new_value: str):
+        if old_value == new_value:
+            raise AddressBookError("New email must be different from old email")
+        if new_value in [p.value for p in self.emails]:
+            raise AddressBookError("The new email already exists.")
+        if old_value not in [p.value for p in self.emails]:
+            raise AddressBookError("Nothing to update: please check the old email.")
+
 
     def add_birthday(self, birthday: str) -> None:
         if self.birthday:
@@ -71,10 +88,17 @@ class Record():
             raise AddressBookError("Birthday not found")
         self.birthday = None
 
-    def edit_birthday(self, value: str) -> None:
+    def change_birthday(self, value: str) -> None:
+        self.birthday = Birthday(value)
+    
+    def validate_birthday_change(self, old_value: str, new_value: str)-> None:
         if not self.birthday:
            raise AddressBookError("Birthday not found")
-        self.birthday = Birthday(value)
+        if old_value == new_value:
+            raise AddressBookError("New birthday must be different from old one")
+        old_birthday = Birthday(new_value)
+        if self.birthday.date != old_birthday.date:
+            raise AddressBookError("Nothing to update: please check the old birthday")
 
     def add_address(self, value: str) -> None:
         if self.address:
@@ -86,11 +110,17 @@ class Record():
             raise AddressBookError("Address not found")
         self.address = None
 
-    def edit_address(self, value: str) -> None:
-        if not self.address:
-           raise AddressBookError("Address not found")
+    def change_address(self, value: str) -> None:
         self.address = Address(value)
     
+    def validate_address_change(self,old_value:str, new_value: str)-> None:
+        if not self.address:
+           raise AddressBookError("Address not found")
+        if self.address.value != old_value:
+            raise AddressBookError("Nothing to update: please check the old address.")
+        if self.address.value == new_value:
+            raise AddressBookError("New address must be different from the old one")
+
     def __str__(self):
         return (
         f"[green]Name:[/green] [cyan]{self.name.value}[/cyan][green]; [/green]"
