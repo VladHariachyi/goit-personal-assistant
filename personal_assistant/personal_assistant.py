@@ -1,7 +1,6 @@
 from rich import print
 from rich.console import Console
 from rich.table import Table
-from .notes import Notes
 from .address_book import (
     load_data,
     save_data,
@@ -15,9 +14,12 @@ from .address_book import (
     AB_DESCRIPTIONS
 )
 from .notes import (
+    Notes,
     NotesEvents,
     NOTES_DESCRIPTIONS,
-    add_note
+    add_note,
+    edit_note,
+    remove_note
 )
 from .shared import parse_input
 
@@ -92,9 +94,9 @@ class PersonalAssistant:
                 case "search_note":
                     print("Search note - TODO")
                 case "remove_note":
-                    print("Remove note - TODO")
+                    print(remove_note(params, self.notes))
                 case "change_note":
-                    print("Change note - TODO")
+                    print(edit_note(params, self.notes))
 
                 # --- fallback ---
                 case _:

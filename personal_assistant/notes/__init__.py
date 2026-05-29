@@ -1,7 +1,7 @@
 from .notes import Notes, Note
 from .models import NotesEvents
 from .constants import NOTES_DESCRIPTIONS
-from .notes_event_handlers import add_note
+from .notes_event_handlers import add_note, edit_note, remove_note
 
 
 __all__ = [
@@ -9,5 +9,7 @@ __all__ = [
     "Note",
     "NotesEvents",
     "NOTES_DESCRIPTIONS",
-    "add_note"
+    "add_note",
+    "edit_note",
+    "remove_note"
 ]
