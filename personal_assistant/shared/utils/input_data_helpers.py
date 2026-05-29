@@ -11,8 +11,6 @@ def parse_input(user_input: str) -> tuple[str, dict]:
 
     command = user_input.split()[0]
 
-    print("AAAA.  ", parsed_params)
-
     return (command, parsed_params)
 
 
