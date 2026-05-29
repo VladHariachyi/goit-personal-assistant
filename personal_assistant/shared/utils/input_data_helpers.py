@@ -9,9 +9,6 @@ def parse_input(user_input: str) -> tuple[str, dict]:
         key, val = param.split("=", 1)
         parsed_params[key.strip().lower()] = val.strip().strip("\"'")
 
-    command = user_input.split()[0]
+    command = user_input.split()[0].lower()
 
     return (command, parsed_params)
-
-
-

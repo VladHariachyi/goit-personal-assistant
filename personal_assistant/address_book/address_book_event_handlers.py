@@ -6,43 +6,43 @@ from .constants import REQUIRED_PAIRS, SEARCH_FILTERS
 def format_record(record: Record) -> str:
     return str(record)
 
-def validate_change_contact(fields: dict, pairs) -> None:
+def validate_change_contact(fields: dict, pairs: list) -> None:
     for old, new in pairs:
         if old in fields or new in fields:
             if (old in fields) != (new in fields):
                 raise InputError(f"Both {old} and {new} must be provided.")
-
+            
 
 # Add a new contact to the dictionary
 @catch_error
 @check_input(min_args=1)
-def add_contact(fields: dict[str], book: AddressBook)-> str:
+def add_contact(fields: dict, book: AddressBook)-> str:
     
     name = fields.get("name")
 
     if not name:
-        raise InputError(f"Incorrect input. Please use 'options' to see available commands and correct format.")
+        raise InputError(f"Invalid input. Name is required.")
     record = book.find(name)
     
-    # CASE 1: contact exists
+    # ================= EXISTING CONTACT =================
     if record:
         # if no additional data
-        if not any(key != "name" for key in fields):
-            raise AddressBookError("Contact already exists, add something.\n"+ format_record(record))
+        if set(fields.keys()) == {"name"}:
+            raise AddressBookError("Nothing to update. Please change at least one field.")
         # if phone provided -> update
         if "phone" in fields:
             phones = [p.strip() for p in fields["phone"].split(",")]
             for phone in phones:
                 if book.phone_exists(phone):
-                    raise AddressBookError("This phone number already exists")
+                    raise AddressBookError("Phone already exists in your contacts.")
                 record.add_phone(phone)
         
         if "email" in fields:
             emails = [p.strip() for p in fields["email"].split(",")]
             for email in emails:
                 if book.email_exists(email):
-                    raise AddressBookError("This email already exists")
-                record.add_email(fields["email"])
+                    raise AddressBookError("Email already exists in your contacts.")
+                record.add_email(email)
 
         if "birthday" in fields:
             record.add_birthday(fields["birthday"])
@@ -50,16 +50,15 @@ def add_contact(fields: dict[str], book: AddressBook)-> str:
         if "address" in fields:
             record.add_address(fields["address"])
 
-        return "[green]Contact updated.[/green]\n" + format_record(record)
+        return "[green]Contact successfully updated.[/green]\n" + record.detailed_view()
 
-    # CASE 2: contact does not exist
+    # ================= NEW CONTACT =================
     record = Record(name)
 
-    # CASE 2.1: with phone
     if "phone" in fields:
         phone = fields["phone"]
         if book.phone_exists(phone):
-            raise AddressBookError("This phone number already exists")
+            raise AddressBookError("Phone already exists in your contacts.")
         record.add_phone(phone)
     
     if "email" in fields:
@@ -72,16 +71,16 @@ def add_contact(fields: dict[str], book: AddressBook)-> str:
         record.add_address(fields["address"])
         
     book.add_record(record)
-    return "[green]Contact added.[/green]\n" + format_record(record)
+    return "[green]Contact successfully added.[/green]\n" + record.detailed_view()
 
 
 # Change phone number for an existing contact
 @catch_error
 @check_input(min_args=2)
-def change_contact(fields: dict[str], book: AddressBook) -> str:
+def change_contact(fields: dict, book: AddressBook) -> str:
     name = fields.get("name")
     if not name:
-        raise InputError("Name is required. Use: change_contact name=<name> ...")
+        raise InputError("That command is missing a name. Try: change_contact name=<name> old_phone=<phone> new_phone=<phone>")
     record = book.find(name)
 
     if not record:
@@ -119,7 +118,7 @@ def change_contact(fields: dict[str], book: AddressBook) -> str:
     }
 
     # VALIDATION
-    for field_name, config in change_config.items():
+    for _, config in change_config.items():
         if config["field"] in fields:
             config["validate"]()
 
@@ -129,11 +128,12 @@ def change_contact(fields: dict[str], book: AddressBook) -> str:
             config["change"]()
             updated_fields.append(field_name)
 
-    return f"[green]Contact updated successfully: {', '.join(updated_fields)}.[/green]\n" + format_record(record)
+    return f"[green]Contact updated successfully: {', '.join(updated_fields)}.[/green]\n" + record.detailed_view()
+
 
 @catch_error
 @check_input(min_args=1)
-def search_contact(fields: dict[str], book: AddressBook) -> str:
+def search_contact(fields: dict, book: AddressBook) -> str:
     results = list(book.data.values())
 
     for field, query in fields.items():
@@ -149,15 +149,12 @@ def search_contact(fields: dict[str], book: AddressBook) -> str:
     if not results:
         raise AddressBookError("No contacts found")
 
-    return "\n\n".join(
-        format_record(record)
-        for record in results
-    )
+    return "\n".join(format_record(r) for r in results)
 
 
 @catch_error
 @check_input(min_args=1)
-def remove_contact(fields: dict[str], book: AddressBook) -> str:
+def remove_contact(fields: dict, book: AddressBook) -> str:
     if "name" not in fields:
         raise InputError("Name is required")
 
@@ -165,7 +162,7 @@ def remove_contact(fields: dict[str], book: AddressBook) -> str:
     record = book.find(name)
 
     if not record:
-        raise AddressBookError("Contact doesn't exist")
+        raise AddressBookError("Contact not found")
 
     removed = []
 
@@ -235,27 +232,13 @@ def show_all(_, book: AddressBook) -> str:
     
 
 @catch_error
-def show_birthday(args, book: AddressBook) -> str:
-    name, *_ = args
-    record = book.find(name)
-
-    if record is None:
-        raise KeyError
-
-    if record.birthday is None:
-        raise AddressBookError("Birthday is not set")
-
-    return f"[cyan]{record.birthday.date.strftime('%d.%m.%Y')}[/cyan]"
-    
-
-@catch_error
 @check_input(min_args=0, max_args=1)
 def birthdays(args, book: AddressBook) -> str:
     requested_days = int(args[0]) if args else 7
     birthdays_list = book.get_upcoming_birthdays(requested_days)
     result = []
     if not birthdays_list:
-        return "[green]The list is empty. No celebrations, only work![/green]"
+        return "[green]No upcoming birthdays. Quiet times ahead 😊[/green]"
     for user in birthdays_list:
         result.append(
             f"Name: [cyan]{user['name']}[/cyan], congratulation date: [cyan]{user['congratulation_date']}[/cyan]"
@@ -264,12 +247,12 @@ def birthdays(args, book: AddressBook) -> str:
 
 
 @catch_error
-def save_data(book, filename="addressbook.pkl") -> None:
+def save_data(book: AddressBook, filename: str = "addressbook.pkl") -> None:
     with open(filename, "wb") as f:
         pickle.dump(book, f)
 
 
-def load_data(filename="addressbook.pkl") -> AddressBook:
+def load_data(filename: str = "addressbook.pkl") -> AddressBook:
     from .address_book import AddressBook
     try:
         with open(filename, "rb") as f:

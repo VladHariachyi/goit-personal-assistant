@@ -3,10 +3,10 @@ from functools import wraps
 from ...error_handler import InputError
 
 
-def check_input(*required_args, min_args: int = None, max_args: int = None) -> Callable:
+def check_input(*required_args, min_args: int | None = None, max_args: int | None = None) -> Callable:
     def decorator(callback: Callable) -> Callable:
         @wraps(callback)
-        def wrapper(args: dict[str], book):
+        def wrapper(args: dict, book):
             actual_count = len(args)
 
             # STRICT mode

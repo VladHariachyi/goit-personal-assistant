@@ -8,4 +8,3 @@ class AddressBookEvents(Enum):
     SEARCH_CONTACT = "search_contact"
     UPCOMING = "show_upcoming_birthdays"
     SHOW_ALL = "show_all_contacts"
-    

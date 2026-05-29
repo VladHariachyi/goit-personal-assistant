@@ -86,7 +86,6 @@ class PersonalAssistant:
                     print("[red]Invalid command.[/red]")
     
     def show_options(self):
-        print('here')
         table = Table(title="Available commands", show_lines=True)
         table.add_column("Command", style="cyan")
         table.add_column("Usage", style="white")
