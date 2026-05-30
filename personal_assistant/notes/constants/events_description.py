@@ -22,4 +22,17 @@ NOTES_DESCRIPTIONS = {
         'Optional arguments are shown in square brackets `[]` '
         'for documentation purposes only. Do not include the brackets when entering the command.'
     ),
+        NotesEvents.SEARCH_NOTE: (
+        'Searches notes by title or tag. '
+        'Provide either the "title" argument or the "tag" argument. '
+        'Examples: search_note <title="Meeting notes"> '
+        'or search_note <tag="#work">. '
+        'The command returns all matching notes.'
+    ),
+
+    NotesEvents.SHOW_ALL_NOTES: (
+        'Displays all existing notes. '
+        'This command does not require any arguments. '
+        'Example: show_all_notes'
+    ),
 }

@@ -106,7 +106,7 @@ class PersonalAssistant:
                 case "add_note":
                     print(add_note(params, self.notes))
                 case "search_note":
-                    print("Search note - TODO")
+                    print(search_note(params, self.notes))
                 case "show_all_notes":
                     print(show_all_notes(self.notes))    
                 case "remove_note":
