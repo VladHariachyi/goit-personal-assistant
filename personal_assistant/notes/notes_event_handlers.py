@@ -1,4 +1,4 @@
-from ..shared import NotesError, catch_error, check_input, check_input
+from ..shared import NotesError, catch_error, check_input
 from .note import Note
 from .notes import Notes
 
@@ -128,5 +128,47 @@ def remove_note(fields: dict[str], notes: Notes) -> str:
 
 @catch_error
 @check_input(min_args=1)
-def show_notes(fields: dict[str], notes: Notes) -> str:
-    pass
+def search_note(fields: dict[str], notes: Notes) -> str:
+
+    title = fields.get("title")
+    tag = fields.get("tag")
+
+    found_notes = []
+
+    if title:
+        found_notes = notes.find_notes(
+            note_title=title
+        )
+
+    elif tag:
+        found_notes = notes.find_notes(
+            note_tag=tag
+        )
+
+    else:
+        raise NotesError(
+            "Please provide title or tag"
+        )
+
+    if not found_notes:
+        raise NotesError(
+            "No notes found"
+        )
+
+    return "\n\n".join(
+        str(note)
+        for note in found_notes
+    )
+
+@catch_error
+def show_all_notes(notes: Notes) -> str:
+
+    if not notes.data:
+        raise NotesError(
+            "There are no notes"
+        )
+
+    return "\n\n".join(
+        str(note)
+        for note in notes.data
+    )

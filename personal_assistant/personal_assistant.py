@@ -21,7 +21,9 @@ from .notes import (
     NOTES_DESCRIPTIONS,
     add_note,
     edit_note,
-    remove_note
+    remove_note,
+    show_all_notes,
+    search_note
 )
 from .shared import parse_input, Status
 
@@ -105,6 +107,8 @@ class PersonalAssistant:
                     print(add_note(params, self.notes))
                 case "search_note":
                     print("Search note - TODO")
+                case "show_all_notes":
+                    print(show_all_notes(self.notes))    
                 case "remove_note":
                     print(remove_note(params, self.notes))
                 case "change_note":
