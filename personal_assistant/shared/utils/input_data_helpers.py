@@ -1,4 +1,21 @@
 import re
+from difflib import get_close_matches
+
+COMMANDS = [
+    "exit",
+    "options",
+    "add_contact",
+    "change_contact",
+    "remove_contact",
+    "search_contact",
+    "show_upcoming_birthdays",
+    "show_all_contacts",
+    "add_note",
+    "change_note",
+    "remove_note"
+    "search_note",
+    "show_all_notes"  
+]
 
 def parse_input(user_input: str) -> tuple[str, dict]:
     parsed_params = {}
@@ -12,3 +29,7 @@ def parse_input(user_input: str) -> tuple[str, dict]:
     command = user_input.split()[0].lower()
 
     return (command, parsed_params)
+
+def suggest_command(user_command: str) -> str | None:
+    matches = get_close_matches(user_command, COMMANDS, n=1, cutoff=0.6)
+    return matches[0] if matches else None
