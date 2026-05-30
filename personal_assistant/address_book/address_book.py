@@ -13,7 +13,7 @@ class AddressBook(UserDict):
             raise AddressBookError("Contact already exists")
         self.data[name] = record
 
-    def rename_record(self, old_name: str, new_name: str):
+    def rename_record(self, old_name: str, new_name: str) -> None:
         record = self.data.pop(old_name)
         self.data[new_name] = record
 
@@ -22,7 +22,7 @@ class AddressBook(UserDict):
         
     def delete(self, name: str) -> None:
         if not self.find(name):
-            raise AddressBookError("Oops.. Contact was not found.")
+            raise AddressBookError("Contact not found.")
         self.data.pop(name)
 
     def get_upcoming_birthdays(self, requested_days: int) -> list:
@@ -30,11 +30,11 @@ class AddressBook(UserDict):
         delta_date = today + timedelta(days = requested_days)
         congratulations_list = []
     
-        for name, value in self.data.items():
-            if value.birthday is None:
+        for name, record in self.data.items():
+            if record.birthday is None:
                 continue
 
-            birthday = value.birthday.date.date()
+            birthday = record.birthday.date.date()
             birthday_this_year = birthday.replace(year=today.year)
         
             # If the birthday has already passed this year, check the next year

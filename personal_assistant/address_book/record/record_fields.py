@@ -9,12 +9,14 @@ class Name(Field):
     """Contact name field."""
 
     def __init__(self, value: str):
-        self.validate_required(value)
+        self.validate_name(value)
         super().__init__(value)
 
-    def validate_required(self, value: str) -> None:
-        if not value.strip():
-            raise AddressBookError("The name is required")
+    def validate_name(self, value: str) -> None:
+        if not value:
+            raise AddressBookError("Please enter a name.")
+        if not re.search(r"[A-Za-zА-Яа-яЁёІіЇїЄє]", value):
+            raise AddressBookError("Name should contain at least one letter (for example, John or Anna).")
 
 
 class Phone(Field):
@@ -34,23 +36,24 @@ class Phone(Field):
         """
 
         if not re.fullmatch(Phone.PHONE_PATTERN,value):
-            raise AddressBookError(  "Phone number must be in format +380XXXXXXXXX")
+            raise AddressBookError("Invalid phone number format. Use: +380991234567")
 
 
 class Birthday(Field):
     """The birthday class definition, responsible for saving and validating the birthday date"""
     DATE_FORMAT: str = "%d.%m.%Y"
 
-    def __init__(self, value):
+    def __init__(self, value: str):
         try:
             self.date = datetime.strptime(value, self.DATE_FORMAT)
-            print('try birthday class', self.date)
         except ValueError:
-            raise AddressBookError("Invalid date format. Please use DD.MM.YYYY")
+            raise AddressBookError("Invalid date format. Use: 25.12.1995")
+        super().__init__(value)
 
 
 class Email(Field):
     """Email field."""
+    EMAIL_REGEX = re.compile(r"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$")
 
     def __init__(self, value: str):
         value = value.strip()
@@ -58,9 +61,8 @@ class Email(Field):
         super().__init__(value)
 
     def validate(self, value: str) -> None:
-        EMAIL_REGEX = re.compile(r"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$")
-        if not EMAIL_REGEX.match(value):
-            raise AddressBookError("Invalid email format")
+        if not self.EMAIL_REGEX.match(value):
+            raise AddressBookError("Invalid email format. Use: name@example.com")
         
 
 class Address(Field):
@@ -73,4 +75,4 @@ class Address(Field):
 
     def validate(self, value: str) -> None:
         if not re.search(r"[A-Za-zА-Яа-я]", value):
-            raise AddressBookError("Address must contain letters")
+            raise AddressBookError("Address must contain letters (for example, Baker Street 221B).")

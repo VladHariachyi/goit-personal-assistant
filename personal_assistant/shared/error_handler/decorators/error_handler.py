@@ -17,7 +17,6 @@ def catch_error(func: Callable) -> Callable:
         except KeyError as missed_key:
             return(f"[red][Missed Key Error] '{missed_key}' does not exist[/red]")
         except IndexError:
-            # print('Please use the correct format of the command')
             return(f"[red][Index error] The requested index is out of the range[/red]")
         except ValueError:
             return(f"[red][Value error] Can't process the operation due to incorrect input[/red]")
