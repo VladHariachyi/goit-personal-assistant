@@ -22,14 +22,15 @@ NOTES_DESCRIPTIONS = {
         'Optional arguments are shown in square brackets `[]` '
         'for documentation purposes only. Do not include the brackets when entering the command.'
     ),
-        NotesEvents.SEARCH_NOTE: (
-        'Searches notes by title or tag. '
-        'Provide either the "title" argument or the "tag" argument. '
-        'Examples: search_note <title="Meeting notes"> '
-        'or search_note <tag="#work">. '
-        'The command returns all matching notes.'
+    NotesEvents.SEARCH_NOTE: (
+        'Searches notes by title, description, or tag. '
+        'You can provide one or multiple search parameters. '
+        'Example: search_note \\[title="value"] '
+        '\\[description="value"] '
+        '\\[tag="#value"] '
+        'Optional arguments are shown in square brackets `[]` '
+        'for documentation purposes only. Do not include the brackets when entering the command.'
     ),
-
     NotesEvents.SHOW_ALL_NOTES: (
         'Displays all existing notes. '
         'This command does not require any arguments. '
