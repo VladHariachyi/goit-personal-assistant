@@ -22,4 +22,17 @@ NOTES_DESCRIPTIONS = {
         'Optional arguments are shown in square brackets `[]` '
         'for documentation purposes only. Do not include the brackets when entering the command.'
     ),
+    NotesEvents.SEARCH_NOTE: (
+        'Searches notes by title, description, or tag. '
+        'You can provide one or multiple search parameters. '
+        'Example: search_note \\[title="value"] '
+        '\\[description="value"] '
+        '\\[tag="#value"] '
+        'Optional arguments are shown in square brackets `[]` '
+        'for documentation purposes only. Do not include the brackets when entering the command.'
+    ),
+    NotesEvents.SHOW_ALL_NOTES: (
+        'Displays all saved notes. '
+        'Example: show_all_notes'
+    ),
 }

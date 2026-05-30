@@ -14,7 +14,7 @@ def add_note_props(note: Note, props: dict[str, str]) -> None:
 
 @catch_error
 @check_input(min_args=1, max_args=3)
-def add_note(fields: dict[str], notes: Notes) -> str:
+def add_note(fields: dict, notes: Notes) -> str | None:
     fields_lenght = len(fields.keys())
     note_title = fields.get("title")
     note = notes.get_note_by_title(note_title)
@@ -59,7 +59,7 @@ def add_note(fields: dict[str], notes: Notes) -> str:
 
 @catch_error
 @check_input(min_args=2, max_args=6)
-def edit_note(fields: dict[str], notes: Notes) -> str:
+def edit_note(fields: dict, notes: Notes) -> str:
     note_title = fields.get("title")
     note = notes.get_note_by_title(note_title)
 
@@ -86,7 +86,7 @@ def edit_note(fields: dict[str], notes: Notes) -> str:
     
 @catch_error
 @check_input(min_args=1)
-def remove_note(fields: dict[str], notes: Notes) -> str:
+def remove_note(fields: dict, notes: Notes) -> str:
     note_title = fields.get("title")
     note = notes.get_note_by_title(note_title)
     fields_lenght = len(fields.keys())
@@ -128,7 +128,7 @@ def remove_note(fields: dict[str], notes: Notes) -> str:
 
 @catch_error
 @check_input(min_args=1)
-def search_note(fields: dict[str], notes: Notes) -> str:
+def search_note(fields: dict, notes: Notes) -> str:
 
     title = fields.get("title")
     tag = fields.get("tag")

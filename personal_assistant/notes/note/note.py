@@ -23,19 +23,19 @@ class Note:
         desctription_text = (
             f"[cyan]{'\n'.join(formatted_description)}[/cyan]" 
             if len(formatted_description) 
-            else "[yellow3]Empty[/yellow3]"
+            else "[yellow3]• Empty[/yellow3]"
         )
         tags_text = (
             f"[cyan]{'\n'.join(formatted_tags)}[/cyan]" 
             if len(formatted_tags) 
-            else "[yellow3]Empty[/yellow3]"
+            else "[yellow3]• Empty[/yellow3]"
         )
 
         return (
             f"[green]Title: [/green][cyan]{self.title}[/cyan]"
-            f"\n[green]Descriptions[/green]\n"
+            f"\n[green]Descriptions:[/green]\n"
             f"{desctription_text}"
-            f"\n[green]Tags[/green]\n"
+            f"\n[green]Tags:[/green]\n"
             f"{tags_text}"
         )
 
@@ -132,4 +132,4 @@ class Note:
         return found_tag_index
     
     def __format_list_text_entity(self, list: list[str]) -> list[str]:
-        return [f"- {item}" for item in list]
+        return [f"• {item}" for item in list]

@@ -62,7 +62,7 @@ class PersonalAssistant:
 
     def run(
         self,
-        pa_state_path: str
+        pa_state_path: Path
     ) -> None:
         table = Table(
             title="[bold green]Welcome to the assistant bot![/bold green]",
@@ -82,7 +82,6 @@ class PersonalAssistant:
 
             match command:
                 case "exit" | "close":
-                    print(pa_state_path)
                     self.__save_state(pa_state_path)
                     break
                 case "options":
@@ -105,28 +104,31 @@ class PersonalAssistant:
                 # --- NOTES ---
                 case "add_note":
                     print(add_note(params, self.notes))
-                case "search_note":
-                    print("Search note - TODO")
-                case "show_all_notes":
-                    print(show_all_notes(self.notes))    
-                case "remove_note":
-                    print(remove_note(params, self.notes))
                 case "change_note":
                     print(edit_note(params, self.notes))
+                case "remove_note":
+                    print(remove_note(params, self.notes))
+                case "search_note":
+                    print(search_note(params, self.notes))
+                case "show_all_notes":
+                    print(show_all_notes(self.notes))    
 
                 # --- fallback ---
                 case _:
                     print("[red]Invalid command.[/red]")
 
-    def __save_state(self, pa_state_path: str):
+    def __save_state(self, pa_state_path: Path):
         status = save_data(self, pa_state_path)
         message = None
 
         if status == Status.SUCCESS:
-            message = f"[gold1]The data is saved to '{pa_state_path}'. Good bye![/gold1]"
+            message = (
+                f"[gold1]The data is saved to '{pa_state_path}'.\n"
+                f"Good bye! 👋[/gold1]"
+                )
         else:
             message = (
-                "[red]Is not possible to save data by provided path "
+                "[red]Is not possible to save data by provided path.\n"
                 f"'{pa_state_path}', directory does not exist[/red]")
             
         print(message)
@@ -157,8 +159,8 @@ class PersonalAssistant:
 
 def save_data(
     personal_assistant: PersonalAssistant,
-    path: str
-) -> None:
+    path: Path
+) -> Status:
     try: 
         with open(path, "wb") as f:
             pickle.dump(personal_assistant, f)
@@ -168,7 +170,7 @@ def save_data(
 
 
 def start_personal_assistant(
-    pa_state_path: str = default_pa_state_path
+    pa_state_path: Path = default_pa_state_path
 ) -> PersonalAssistant:
     personal_asssistant: PersonalAssistant
 

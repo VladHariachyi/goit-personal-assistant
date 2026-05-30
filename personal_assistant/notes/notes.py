@@ -20,7 +20,7 @@ class Notes(UserList):
 
         self.data.pop(note_index)
 
-    def get_note_by_title(self, note_title: str) -> Note:
+    def get_note_by_title(self, note_title: str) -> Note | None:
         note_index = self.__get_note_index(note_title, False)
 
         return None if note_index is None else self.data[note_index]
@@ -30,7 +30,7 @@ class Notes(UserList):
         note_title: str = "", 
         note_description: str = "", 
         note_tag: str = ""
-    ) -> list[Note]:
+    ) -> list[Note] | None:
         if note_title:
             return [note for note in self.data if note_title in note.title.value]
         
