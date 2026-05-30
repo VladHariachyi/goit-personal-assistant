@@ -7,9 +7,7 @@ from .address_book_event_handlers import (
     remove_contact,
     show_phone, 
     show_all, 
-    birthdays,
-    load_data,
-    save_data,
+    birthdays
 )
 from .models import AddressBookEvents
 from .constants import AB_DESCRIPTIONS, REQUIRED_PAIRS
@@ -25,8 +23,6 @@ __all__ = [
     "show_phone", 
     "show_all", 
     "birthdays",
-    "load_data",
-    "save_data",
     "AddressBookEvents",
     "AB_DESCRIPTIONS",
     "REQUIRED_PAIRS"

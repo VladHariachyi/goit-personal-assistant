@@ -3,14 +3,45 @@ from ..record.record_fields import Birthday
 
 
 AB_DESCRIPTIONS = {
-    AddressBookEvents.ADD_CONTACT: 'add_contact <name="value"> \\[phone="value"] \\[email="value"] \\[birthday="value"] \\[address="value"]',
-    AddressBookEvents.CHANGE_CONTACT: 'change_contact <name="value"> \\[new_name="value"] .... \\[old_phone="value" new_phone="value"]...',
-    AddressBookEvents.REMOVE_CONTACT: 'remove_contact <name="value"> \\[phone="value"] \\[email="value"] \\[birthday="value"] \\[address="value"]',
-    AddressBookEvents.SEARCH_CONTACT: 'search_contact \\[name="value"] \\[phone="value"] \\[email="value"] \\[birthday="value"] \\[address="value"]',
-
-    AddressBookEvents.UPCOMING: 'show_upcoming_birthdays \\[days="value"]',
-
-    AddressBookEvents.SHOW_ALL: "show_all_contacts",
+    AddressBookEvents.ADD_CONTACT: (
+        'Adds a new contact to the address book. Provide the required "name" argument, '
+        'which is used as the contact identifier. Example: add_contact <name="value"> '
+        '\\[phone="value"] \\[email="value"] \\[birthday="value"] \\[address="value"]. '
+        'Optional arguments are shown in square brackets `[]` for documentation purposes only. '
+        'Do not include the brackets when entering the command.'
+    ),
+    AddressBookEvents.CHANGE_CONTACT: (
+        'Changes an existing contact data. Provide the required "name" argument, '
+        'which identifies the contact to update. Example: change_contact <name="value"> '
+        '\\[new_name="value"] \\[phone="old=value,new=value"] \\[email="value"] '
+        '\\[birthday="value"] \\[address="value"]. '
+        'Optional arguments are shown in square brackets `[]` for documentation purposes only. '
+        'Do not include the brackets when entering the command.'
+    ),
+    AddressBookEvents.REMOVE_CONTACT: (
+        'Removes contact data or the entire contact. Provide the required "name" argument. '
+        'Example: remove_contact <name="value"> '
+        '\\[phone="value"] \\[email="value"] \\[birthday="value"] \\[address="value"]. '
+        'Optional arguments are shown in square brackets `[]` for documentation purposes only. '
+        'Do not include the brackets when entering the command.'
+    ),
+    AddressBookEvents.SEARCH_CONTACT: (
+        'Searches contacts by given filters. At least one optional argument must be provided. '
+        'Example: search_contact \\[name="value"] \\[phone="value"] \\[email="value"] '
+        '\\[birthday="value"] \\[address="value"]. '
+        'Optional arguments are shown in square brackets `[]` for documentation purposes only. '
+        'Do not include the brackets when entering the command.'
+    ),
+    AddressBookEvents.UPCOMING: (
+        'Shows upcoming birthdays within a number of days. Example: '
+        'show_upcoming_birthdays \\[days="value"]. '
+        'Optional arguments are shown in square brackets `[]` for documentation purposes only. '
+        'Do not include the brackets when entering the command.'
+    ),
+    AddressBookEvents.SHOW_ALL: (
+        'Displays all contacts in the address book. '
+        'Usage: show_all_contacts. No arguments required.'
+    ),
 }
 
 REQUIRED_PAIRS = [
