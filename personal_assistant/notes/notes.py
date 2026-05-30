@@ -1,38 +1,57 @@
-class Note:
+from collections import UserList
 
-    def __init__(
+from .note import Note
+from ..shared.error_handler import NotesError
+
+class Notes(UserList):
+    def add_note(
         self,
-        text,
-        tags=None
-    ):
+        new_note: Note
+    ) -> None:
+        is_exist = bool(len([note for note in self.data if note.title == new_note.title]))
 
-        self.text = text
+        if is_exist:
+            raise NotesError("The note is already exist, add a new one")
 
-        self.tags = tags or []  # Якщо tags не передали створюється пустий список.
+        self.data.append(new_note)
+    
+    def delete_note(self, note_title: str) -> None:
+        note_index = self.__get_note_index(note_title)
 
-    def add_tag(self, tag):
+        self.data.pop(note_index)
 
-        tag = tag.lower()
+    def get_note_by_title(self, note_title: str) -> Note:
+        note_index = self.__get_note_index(note_title, False)
 
-        if tag not in self.tags:
-            self.tags.append(tag)
+        return None if note_index is None else self.data[note_index]
 
-    def remove_tag(self, tag):
+    def find_notes(
+        self, 
+        note_title: str = "", 
+        note_description: str = "", 
+        note_tag: str = ""
+    ) -> list[Note]:
+        if note_title:
+            return [note for note in self.data if note_title in note.title.value]
+        
+        if note_description:
+            return [note for note in self.data if len(note.find_descriptions(note_description))]
+        
+        if note_tag:
+            return [note for note in self.data if len(note.find_tags(note_tag))]
 
-        tag = tag.lower()
+    def __get_note_index(
+        self, 
+        note_title: str,
+        throw_error_if_not_found: bool = True
+    ) -> int | None:
+        found_note_index = None
 
-        if tag in self.tags:
-            self.tags.remove(tag)
-
-    def has_tag(self, tag):
-
-        return tag.lower() in self.tags
-
-    def __str__(self):
-
-        tags = ", ".join(self.tags)
-
-        return (
-            f"Note: {self.text}\n"
-            f"Tags: {tags}"
-        )
+        try:
+           found_note_index = [note.title.value for note in self.data].index(note_title) 
+        except:
+            if throw_error_if_not_found:
+                raise NotesError(f"The note is not found by title: '{note_title}'")
+        
+        return found_note_index
+>>>>>>> 84f0bc657a60cacc2360093ef892395d85758194

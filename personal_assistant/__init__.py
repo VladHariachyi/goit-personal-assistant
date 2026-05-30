@@ -1,4 +1,4 @@
-from .personal_assistant import PersonalAssistant
+from .personal_assistant import start_personal_assistant
 
 
-__all__ = ["PersonalAssistant"]
+__all__ = ["start_personal_assistant"]
