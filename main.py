@@ -1,9 +1,8 @@
-from personal_assistant import PersonalAssistant
+from personal_assistant import start_personal_assistant
 
 
 def main() -> None:
-    app = PersonalAssistant()
-    app.run()
+    start_personal_assistant()
 
 if __name__ == "__main__":
     main()

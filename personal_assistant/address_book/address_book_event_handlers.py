@@ -1,4 +1,3 @@
-import pickle
 from ..shared import AddressBookError, catch_error, check_input, InputError
 from . import AddressBook, Record
 from .constants import REQUIRED_PAIRS, SEARCH_FILTERS
@@ -244,18 +243,3 @@ def birthdays(args, book: AddressBook) -> str:
             f"Name: [cyan]{user['name']}[/cyan], congratulation date: [cyan]{user['congratulation_date']}[/cyan]"
         )
     return "\n".join(result)
-
-
-@catch_error
-def save_data(book: AddressBook, filename: str = "addressbook.pkl") -> None:
-    with open(filename, "wb") as f:
-        pickle.dump(book, f)
-
-
-def load_data(filename: str = "addressbook.pkl") -> AddressBook:
-    from .address_book import AddressBook
-    try:
-        with open(filename, "rb") as f:
-            return pickle.load(f)
-    except FileNotFoundError:
-        return AddressBook()

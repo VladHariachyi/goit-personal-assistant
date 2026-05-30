@@ -1,9 +1,11 @@
 from rich import print
 from rich.console import Console
 from rich.table import Table
+import pickle
+from pathlib import Path
+
 from .address_book import (
-    load_data,
-    save_data,
+    AddressBook,
     add_contact,
     change_contact,
     search_contact,
@@ -21,18 +23,45 @@ from .notes import (
     edit_note,
     remove_note
 )
-from .shared import parse_input
+from .shared import parse_input, Status
 
 console = Console()
+default_pa_state_path = Path(__file__).parent.parent / "personal_assistant.pkl"
 
 
 class PersonalAssistant:
-
     def __init__(self):
         self.notes = Notes()
+        self.book = AddressBook()
 
-    def run(self) -> None:
-        book = load_data()
+    def __getstate__(self):
+        """Generation the personal assistant current state which to be saved
+
+        Retunrns:
+        personal_assistant_state -- The current address book state
+        """
+        return {
+            "notes": self.notes,
+            "book": self.book
+        }
+
+    def __setstate__(self, state):
+        """Retrieves the personal assistant state
+
+        Arguments:
+        personal_assistant_state -- The state which need to retreive 
+        """
+        if state:
+            self.book = state.get("book", AddressBook())
+            self.notes = state.get("notes", Notes())
+            print(f"[green3]Personal assistant data is successfuly retreived[/green3]")
+        else:
+            print(f"[yellow1]Is not possible to retreive personal assistant state due to missed data [/yellow1]")
+
+    def run(
+        self,
+        pa_state_path: str
+    ) -> None:
         table = Table(
             title="[bold green]Welcome to the assistant bot![/bold green]",
             show_lines=True
@@ -51,25 +80,25 @@ class PersonalAssistant:
 
             match command:
                 case "exit" | "close":
-                    save_data(book)
-                    print("[green]Good bye![/green]")
+                    print(pa_state_path)
+                    self.__save_state(pa_state_path)
                     break
                 case "options":
                     self.show_options()
                     
                 # --- ADDRESS BOOK ---
                 case "add_contact":
-                    print(add_contact(params, book))
+                    print(add_contact(params, self.book))
                 case "change_contact":
-                    print(change_contact(params, book))
+                    print(change_contact(params, self.book))
                 case "remove_contact":
-                    print(remove_contact(params, book))
+                    print(remove_contact(params, self.book))
                 case "search_contact":
-                    print(search_contact(params, book))
+                    print(search_contact(params, self.book))
                 case "show_upcoming_birthdays":
-                    print(birthdays(params, book))
+                    print(birthdays(params, self.book))
                 case "show_all_contacts":
-                    print(show_all(params, book))
+                    print(show_all(params, self.book))
 
                 # --- NOTES ---
                 case "add_note":
@@ -84,6 +113,19 @@ class PersonalAssistant:
                 # --- fallback ---
                 case _:
                     print("[red]Invalid command.[/red]")
+
+    def __save_state(self, pa_state_path: str):
+        status = save_data(self, pa_state_path)
+        message = None
+
+        if status == Status.SUCCESS:
+            message = f"[gold1]The data is saved to '{pa_state_path}'. Good bye![/gold1]"
+        else:
+            message = (
+                "[red]Is not possible to save data by provided path "
+                f"'{pa_state_path}', directory does not exist[/red]")
+            
+        print(message)
     
     def show_options(self):
         table = Table(title="Available commands", show_lines=True)
@@ -107,3 +149,31 @@ class PersonalAssistant:
                 NOTES_DESCRIPTIONS.get(event, "")
             )
         console.print(table)
+
+
+def save_data(
+    personal_assistant: PersonalAssistant,
+    path: str
+) -> None:
+    try: 
+        with open(path, "wb") as f:
+            pickle.dump(personal_assistant, f)
+            return Status.SUCCESS
+    except FileNotFoundError:
+        return Status.ERROR
+
+
+def start_personal_assistant(
+    pa_state_path: str = default_pa_state_path
+) -> PersonalAssistant:
+    personal_asssistant: PersonalAssistant
+
+    try:
+        with open(pa_state_path, "rb") as f:
+            personal_asssistant = pickle.load(f)
+    except FileNotFoundError:
+        personal_asssistant = PersonalAssistant()
+
+    personal_asssistant.run(pa_state_path)
+
+    return personal_asssistant
