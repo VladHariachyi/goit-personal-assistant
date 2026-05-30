@@ -71,6 +71,7 @@ class Note:
         self.descriptions.pop(found_description_index)
 
     def find_descriptions(self, search_term: str) -> list[Description] | None:
+       
         return self.__find_by_text_value(search_term, self.descriptions)
     
     def add_tag(self, text: str) -> None:
@@ -101,9 +102,9 @@ class Note:
         return self.__find_by_text_value(search_term, self.tags)
 
     def __find_by_text_value(self, search_term: str, data: list[Field]) -> list | None:
-        pattern = rf"{search_term}"
+        pattern = re.escape(search_term)
 
-        return filter(lambda item: re.search(pattern, item.value), data)
+        return list(filter(lambda item: re.search(pattern, item.value), data))
     
     def __get_descriptions_text(self) -> list[str]:
         return [d.value for d in self.descriptions]
