@@ -25,7 +25,7 @@ from .notes import (
     show_all_notes,
     search_note
 )
-from .shared import parse_input, Status
+from .shared import parse_input, Status, suggest_command, InputError, catch_error
 
 console = Console()
 default_pa_state_path = Path(__file__).parent.parent / "personal_assistant.pkl"
@@ -115,7 +115,7 @@ class PersonalAssistant:
 
                 # --- fallback ---
                 case _:
-                    print("[red]Invalid command.[/red]")
+                    print(guess_command(command))
 
     def __save_state(self, pa_state_path: Path):
         status = save_data(self, pa_state_path)
@@ -183,3 +183,12 @@ def start_personal_assistant(
     personal_asssistant.run(pa_state_path)
 
     return personal_asssistant
+
+
+@catch_error
+def guess_command(command: str) -> str:
+    suggestion = suggest_command(command)
+    if suggestion:
+        return(f"[red]Unknown command [/red]'{command}'[red]. Did you mean [/red]'{suggestion}'[red]?[/red]")
+    else:
+        return(f"[red]Unknown command [/red]'{command}'[red]. Use 'options' to see commands.[/red]")
