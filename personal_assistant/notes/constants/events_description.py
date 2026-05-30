@@ -32,7 +32,8 @@ NOTES_DESCRIPTIONS = {
         'for documentation purposes only. Do not include the brackets when entering the command.'
     ),
     NotesEvents.SHOW_ALL_NOTES: (
-        'Displays all saved notes. '
+        'Displays all existing notes. '
+        'This command does not require any arguments. '
         'Example: show_all_notes'
     ),
 }
