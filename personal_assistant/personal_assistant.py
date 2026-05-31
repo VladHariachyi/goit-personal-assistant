@@ -173,10 +173,13 @@ def start_personal_assistant(
     pa_state_path: Path = default_pa_state_path
 ) -> PersonalAssistant:
     personal_assistant: PersonalAssistant
+    personal_assistant: PersonalAssistant
 
     try:
         with open(pa_state_path, "rb") as f:
             personal_assistant = pickle.load(f)
+    except FileNotFoundError:
+        personal_assistant = PersonalAssistant()
     except (FileNotFoundError, EOFError, pickle.UnpicklingError):
         personal_assistant = PersonalAssistant()
 
