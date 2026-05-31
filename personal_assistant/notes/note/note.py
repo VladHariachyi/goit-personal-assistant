@@ -9,8 +9,8 @@ class Note:
     def __init__(
         self, 
         title: str, 
-        descriptions: list[str] = [], 
-        tags: list[str] = []
+        descriptions: list[str] | None = None, 
+        tags: list[str] | None = None
     ) -> None:
         self.title = Title(title)
         self.descriptions = [Description(d) for d in descriptions] if descriptions else []
@@ -49,7 +49,7 @@ class Note:
         self.descriptions.append(description)
 
     def edit_title(self, text: str) -> None:
-        if self.title == text:
+        if self.title.value.lower() == text.lower():
             raise NotesError("The title is already exists")
         
         title = Title(text)
@@ -101,10 +101,10 @@ class Note:
     def find_tags(self, search_term: str) -> list[Tag] | None:
         return self.__find_by_text_value(search_term, self.tags)
 
-    def __find_by_text_value(self, search_term: str, data: list[Field]) -> list | None:
+    def __find_by_text_value(self, search_term: str, data: list) -> list | None:
         pattern = re.escape(search_term)
 
-        return list(filter(lambda item: re.search(pattern, item.value), data))
+        return list(filter(lambda item: re.search(pattern, item.value, re.IGNORECASE), data))
     
     def __get_descriptions_text(self) -> list[str]:
         return [d.value for d in self.descriptions]
@@ -112,22 +112,22 @@ class Note:
     def __get_tags_text(self) -> list[str]:
         return [t.value for t in self.tags]
     
-    def __get_description_index(self, description: str) -> int | None:
+    def __get_description_index(self, description: str) -> int:
         found_description_index = None
 
         try:
            found_description_index = [d.value for d in self.descriptions].index(description) 
-        except:
+        except ValueError:
             raise NotesError(f"The description is not found: '{description}'")
         
         return found_description_index
     
-    def __get_tag_index(self, tag: str) -> int | None:
+    def __get_tag_index(self, tag: str) -> int:
         found_tag_index = None
 
         try:
            found_tag_index = [t.value for t in self.tags].index(tag) 
-        except:
+        except ValueError:
             raise NotesError(f"The tag is not found: '{tag}'")
         
         return found_tag_index

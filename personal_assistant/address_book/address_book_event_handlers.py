@@ -206,19 +206,6 @@ def remove_contact(fields: dict, book: AddressBook) -> str:
     return f"Removed: {', '.join(removed)}"
 
 
-# Show phone number for a specific contact
-@catch_error
-def show_phone(args, book: AddressBook) -> str:
-    name = args[0]
-    record = book.find(name)
-
-    if record is None:
-        raise KeyError
-    
-    phones = [p.value for p in record.phones]
-    return f"[cyan]{', '.join(phones)}[/cyan]"
-
-
 # Show all saved contacts
 @catch_error
 @check_input(max_args=0)

@@ -5,7 +5,6 @@ from .address_book_event_handlers import (
     change_contact, 
     search_contact,
     remove_contact,
-    show_phone, 
     show_all, 
     birthdays
 )
@@ -20,7 +19,6 @@ __all__ = [
     "change_contact",
     "search_contact",
     "remove_contact",
-    "show_phone", 
     "show_all", 
     "birthdays",
     "AddressBookEvents",

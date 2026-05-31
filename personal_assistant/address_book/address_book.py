@@ -18,7 +18,11 @@ class AddressBook(UserDict):
         self.data[new_name] = record
 
     def find(self, name: str) -> Record | None:
-        return self.data.get(name)
+        name = name.strip().lower()
+        for key, record in self.data.items():
+            if key.strip().lower() == name:
+                return record
+        return None
         
     def delete(self, name: str) -> None:
         if not self.find(name):
@@ -67,6 +71,6 @@ class AddressBook(UserDict):
     def email_exists(self, email: str) -> bool:
         for record in self.data.values():
             for p in record.emails:
-                if p.value == email:
+                if p.value.lower() == email.lower():
                     return True
         return False

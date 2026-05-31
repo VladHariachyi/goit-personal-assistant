@@ -14,9 +14,12 @@ def add_note_props(note: Note, props: dict[str, str]) -> None:
 
 @catch_error
 @check_input(min_args=1, max_args=3)
-def add_note(fields: dict[str], notes: Notes) -> str:
+def add_note(fields: dict, notes: Notes) -> str | None:
     fields_lenght = len(fields.keys())
     note_title = fields.get("title")
+
+    if not note_title:
+        raise NotesError(f"The note title is not provided")
     note = notes.get_note_by_title(note_title)
     # check args
     has_single_title_arg = note_title and fields_lenght == 1
@@ -27,8 +30,6 @@ def add_note(fields: dict[str], notes: Notes) -> str:
     is_not_exist_with_title_arg = not note and has_single_title_arg
     is_not_exist_with_multiple_args = not note and has_multiple_args
 
-    if not note_title:
-        raise NotesError(f"The note title is not provided")
 
     if is_exist_with_title_arg:
         raise NotesError(f"Note already exists\n{str(note)}")
@@ -59,7 +60,7 @@ def add_note(fields: dict[str], notes: Notes) -> str:
 
 @catch_error
 @check_input(min_args=2, max_args=6)
-def edit_note(fields: dict[str], notes: Notes) -> str:
+def edit_note(fields: dict, notes: Notes) -> str:
     note_title = fields.get("title")
     note = notes.get_note_by_title(note_title)
 
