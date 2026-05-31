@@ -49,7 +49,7 @@ class Notes(UserList):
 
         try:
            found_note_index = [note.title.value for note in self.data].index(note_title) 
-        except:
+        except ValueError:
             if throw_error_if_not_found:
                 raise NotesError(f"The note is not found by title: '{note_title}'")
         

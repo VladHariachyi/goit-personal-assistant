@@ -39,7 +39,7 @@ class PersonalAssistant:
     def __getstate__(self):
         """Generation the personal assistant current state which to be saved
 
-        Retunrns:
+        Returns:
         personal_assistant_state -- The current address book state
         """
         return {
@@ -172,17 +172,17 @@ def save_data(
 def start_personal_assistant(
     pa_state_path: Path = default_pa_state_path
 ) -> PersonalAssistant:
-    personal_asssistant: PersonalAssistant
+    personal_assistant: PersonalAssistant
 
     try:
         with open(pa_state_path, "rb") as f:
-            personal_asssistant = pickle.load(f)
+            personal_assistant = pickle.load(f)
     except FileNotFoundError:
-        personal_asssistant = PersonalAssistant()
+        personal_assistant = PersonalAssistant()
 
-    personal_asssistant.run(pa_state_path)
+    personal_assistant.run(pa_state_path)
 
-    return personal_asssistant
+    return personal_assistant
 
 
 @catch_error

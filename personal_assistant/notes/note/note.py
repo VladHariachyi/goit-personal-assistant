@@ -9,8 +9,8 @@ class Note:
     def __init__(
         self, 
         title: str, 
-        descriptions: list[str] = [], 
-        tags: list[str] = []
+        descriptions: list[str] | None = None, 
+        tags: list[str] | None = None
     ) -> None:
         self.title = Title(title)
         self.descriptions = [Description(d) for d in descriptions] if descriptions else []
@@ -117,7 +117,7 @@ class Note:
 
         try:
            found_description_index = [d.value for d in self.descriptions].index(description) 
-        except:
+        except ValueError:
             raise NotesError(f"The description is not found: '{description}'")
         
         return found_description_index
@@ -127,7 +127,7 @@ class Note:
 
         try:
            found_tag_index = [t.value for t in self.tags].index(tag) 
-        except:
+        except ValueError:
             raise NotesError(f"The tag is not found: '{tag}'")
         
         return found_tag_index

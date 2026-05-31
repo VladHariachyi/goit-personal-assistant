@@ -12,7 +12,7 @@ COMMANDS = [
     "show_all_contacts",
     "add_note",
     "change_note",
-    "remove_note"
+    "remove_note",
     "search_note",
     "show_all_notes"  
 ]
