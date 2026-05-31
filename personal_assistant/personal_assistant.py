@@ -165,7 +165,7 @@ def save_data(
         with open(path, "wb") as f:
             pickle.dump(personal_assistant, f)
             return Status.SUCCESS
-    except FileNotFoundError:
+    except OSError:
         return Status.ERROR
 
 
@@ -178,6 +178,8 @@ def start_personal_assistant(
         with open(pa_state_path, "rb") as f:
             personal_assistant = pickle.load(f)
     except FileNotFoundError:
+        personal_assistant = PersonalAssistant()
+    except (FileNotFoundError, EOFError, pickle.UnpicklingError):
         personal_assistant = PersonalAssistant()
 
     personal_assistant.run(pa_state_path)

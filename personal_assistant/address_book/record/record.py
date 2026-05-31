@@ -16,7 +16,7 @@ class Record():
         self.name = Name(new_name)
 
     def validate_name_change(self, new_name: str) -> None:
-        if self.name.value == new_name:
+        if self.name.value.lower() == new_name.lower():
             raise AddressBookError("Nothing to update: names are identical.")
 
     def add_phone(self, value: str) -> None:
@@ -54,11 +54,11 @@ class Record():
         self.emails.append(Email(value))
 
     def validate_email_change(self, old_value: str, new_value: str) -> None:
-        if old_value not in [p.value for p in self.emails]:
+        if old_value.lower() not in [p.value.lower() for p in self.emails]:
             raise AddressBookError("It looks like this email was not found in this contact. Please check it and try again.")
-        if old_value == new_value:
+        if old_value.lower() == new_value.lower():
             raise AddressBookError("It looks like the new email is the same as the current one. Please use a different email.")
-        if new_value in [p.value for p in self.emails]:
+        if new_value.lower() in [p.value.lower() for p in self.emails]:
             raise AddressBookError("New email is already in this contact. Please use a different one.")
         
     def change_email(self, old_value: str, new_value: str) -> None:
@@ -73,7 +73,7 @@ class Record():
 
     def find_email(self, value: str) -> Email | None:
         for email in self.emails:
-            if email.value == value:
+            if email.value.lower() == value.lower():
                 return email
         raise AddressBookError("It looks like this email was not found in this contact. Please check it and try again.")
 
@@ -106,9 +106,9 @@ class Record():
     def validate_address_change(self,old_value:str, new_value: str)-> None:
         if not self.address:
            raise AddressBookError("This contact doesn't have an address set")
-        if self.address.value != old_value:
+        if self.address.value.lower() != old_value.lower():
             raise AddressBookError("That old address doesn't match the current value. Please check it and try again.")
-        if self.address.value == new_value:
+        if self.address.value.lower() == new_value.lower():
             raise AddressBookError("It looks like the new address is the same as the current one. Please enter a different address.")
     
     def change_address(self, value: str) -> None:

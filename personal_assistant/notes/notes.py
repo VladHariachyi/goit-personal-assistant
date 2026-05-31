@@ -32,7 +32,7 @@ class Notes(UserList):
         note_tag: str = ""
     ) -> list[Note] | None:
         if note_title:
-            return [note for note in self.data if note_title in note.title.value]
+            return [note for note in self.data if note_title.lower() in note.title.value.lower()]
         
         if note_description:
             return [note for note in self.data if len(note.find_descriptions(note_description))]
@@ -48,7 +48,7 @@ class Notes(UserList):
         found_note_index = None
 
         try:
-           found_note_index = [note.title.value for note in self.data].index(note_title) 
+           found_note_index = [note.title.value.lower() for note in self.data].index(note_title.lower()) 
         except ValueError:
             if throw_error_if_not_found:
                 raise NotesError(f"The note is not found by title: '{note_title}'")
