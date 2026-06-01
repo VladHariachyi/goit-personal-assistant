@@ -55,7 +55,7 @@ def add_note(fields: dict, notes: Notes) -> str | None:
         add_note_props(note, fields)
         notes.add_note(note)
 
-        return f"[green]Note added.[/green]\n {str(note)}"
+        return f"[green]Note added.[/green]\n{str(note)}"
 
 
 @catch_error

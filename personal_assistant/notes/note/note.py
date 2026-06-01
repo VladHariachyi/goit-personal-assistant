@@ -32,7 +32,7 @@ class Note:
         )
 
         return (
-            f"[green]Title: [/green][cyan]{self.title}[/cyan]"
+            f"[green]📌 Title: [/green][cyan]{self.title}[/cyan]"
             f"\n[green]Descriptions:[/green]\n"
             f"{desctription_text}"
             f"\n[green]Tags:[/green]\n"
