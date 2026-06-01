@@ -19,6 +19,8 @@ COMMANDS = [
 
 def parse_input(user_input: str) -> tuple[str, dict]:
     parsed_params = {}
+    if not user_input.strip():
+        return ("", {}) 
     input_pattern = r"\w+=[\"\']{1}[^\"\']+[\"\']{1}"
     params = re.findall(input_pattern, user_input)
 

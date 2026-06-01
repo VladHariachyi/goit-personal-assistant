@@ -1,0 +1,9 @@
+README.md
+pyproject.toml
+goit_personal_assistant.egg-info/PKG-INFO
+goit_personal_assistant.egg-info/SOURCES.txt
+goit_personal_assistant.egg-info/dependency_links.txt
+goit_personal_assistant.egg-info/entry_points.txt
+goit_personal_assistant.egg-info/top_level.txt
+personal_assistant/__init__.py
+personal_assistant/personal_assistant.py

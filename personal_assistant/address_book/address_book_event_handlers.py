@@ -213,7 +213,7 @@ def show_all(_, book: AddressBook) -> str:
     if not book:
         raise AddressBookError("No contacts saved.")
 
-    result = "\n".join(str(record) for record in book.values())
+    result = "\n".join(str(record) for record in sorted(book.values(), key=lambda record: record.name.value.lower()))
     return result
     
 
