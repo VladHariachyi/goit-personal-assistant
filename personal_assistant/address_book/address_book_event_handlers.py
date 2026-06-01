@@ -221,7 +221,6 @@ def show_all(_, book: AddressBook) -> str:
 @check_input(min_args=0, max_args=1)
 def birthdays(args, book: AddressBook) -> str:
     requested_days = int(args.get("days", 7))
-    print("inside birthdays")
     birthdays_list = book.get_upcoming_birthdays(requested_days)
     result = []
     if not birthdays_list:

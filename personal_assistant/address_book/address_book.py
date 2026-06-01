@@ -35,7 +35,6 @@ class AddressBook(UserDict):
         self.data.pop(record.name.value)
 
     def get_upcoming_birthdays(self, requested_days: int) -> list:
-        print("inside get_upcoming_birthdays")
         today = datetime.today().date()
         delta_date = today + timedelta(days = requested_days)
         congratulations_list = []
