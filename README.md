@@ -1,6 +1,7 @@
 # 🤖 Personal Assistant CLI
 
 A command-line personal assistant for managing contacts and notes, with persistent storage between sessions.
+This project can be used both as a script and as an installed CLI package.
 
 ---
 
@@ -56,10 +57,30 @@ pip install -r requirements.txt
 
 ---
 
+### CLI Installation (optional)
+
+After cloning the repository, navigate into the project folder:
+
+```bash
+cd goit-personal-assistant
+```
+After installing the project as a package, you can run it globally:
+
+```bash
+pip install -e .
+assistant
+```
+
+---
+
 ## Running the App
 
 ```bash
+# Run as script
 python main.py
+
+# OR run as installed CLI command
+assistant
 ```
 
 On first launch, a new empty assistant is created. On subsequent launches, your saved data is automatically restored from `personal_assistant.pkl` in the project root.
@@ -157,6 +178,8 @@ search_contact birthday="25.12"
 search_contact address="Baker"
 ```
 
+- Search is case-insensitive (e.g. "john", "John", "JOHN" are equivalent)
+
 ---
 
 #### `show_all_contacts`
@@ -242,6 +265,8 @@ search_note title="shop"
 search_note tag="#grocery"
 ```
 
+- Search is case-insensitive across title, tags, and descriptions
+
 ---
 
 #### `show_all_notes`
@@ -277,6 +302,7 @@ On `exit` or `close`, the assistant serializes its full state (address book + no
 goit-personal-assistant/
 ├── main.py                          # Entry point
 ├── requirements.txt
+├── pyproject.toml                   # CLI configuration (entry point: assistant)
 ├── personal_assistant.pkl           # Auto-generated save file (after first exit)
 └── personal_assistant/
     ├── personal_assistant.py        # PersonalAssistant class, CLI loop, persistence

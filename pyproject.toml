@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "goit-personal-assistant"
+version = "0.1.0"
+description = "Personal assistant CLI project"
+requires-python = ">=3.10"
+
+[tool.setuptools]
+packages = ["personal_assistant"]
+
+[project.scripts]
+assistant = "personal_assistant.personal_assistant:start_personal_assistant"

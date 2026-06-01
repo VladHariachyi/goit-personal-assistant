@@ -1,0 +1,2 @@
+[console_scripts]
+assistant = personal_assistant.personal_assistant:start_personal_assistant

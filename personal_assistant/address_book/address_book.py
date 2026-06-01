@@ -9,25 +9,30 @@ class AddressBook(UserDict):
         
     def add_record(self, record: Record) -> None:
         name = record.name.value
-        if self.find(name):
+        if self.find_record(name):
             raise AddressBookError("Contact already exists")
         self.data[name] = record
 
     def rename_record(self, old_name: str, new_name: str) -> None:
-        record = self.data.pop(old_name)
+        real_key = next((key for key in self.data.keys() if key.strip().lower() == old_name.lower()), None)
+        if not real_key:
+            raise AddressBookError("Contact not found.")
+        record = self.data.pop(real_key)
         self.data[new_name] = record
 
-    def find(self, name: str) -> Record | None:
-        name = name.strip().lower()
+
+    def find_record(self, name: str) -> Record | None:
         for key, record in self.data.items():
-            if key.strip().lower() == name:
+            if key.strip().lower() == name.lower():
                 return record
         return None
+    
         
     def delete(self, name: str) -> None:
-        if not self.find(name):
+        record = self.find_record(name)
+        if not record:
             raise AddressBookError("Contact not found.")
-        self.data.pop(name)
+        self.data.pop(record.name.value)
 
     def get_upcoming_birthdays(self, requested_days: int) -> list:
         today = datetime.today().date()

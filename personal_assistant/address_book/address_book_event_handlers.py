@@ -21,7 +21,7 @@ def add_contact(fields: dict, book: AddressBook)-> str:
 
     if not name:
         raise InputError(f"Invalid input. Name is required.")
-    record = book.find(name)
+    record = book.find_record(name)
     
     # ================= EXISTING CONTACT =================
     if record:
@@ -80,7 +80,7 @@ def change_contact(fields: dict, book: AddressBook) -> str:
     name = fields.get("name")
     if not name:
         raise InputError("That command is missing a name. Try: change_contact name=<name> old_phone=<phone> new_phone=<phone>")
-    record = book.find(name)
+    record = book.find_record(name)
 
     if not record:
         raise AddressBookError("Contact doesn't exist, please create the contact first.")
@@ -158,7 +158,7 @@ def remove_contact(fields: dict, book: AddressBook) -> str:
         raise InputError("Name is required")
 
     name = fields["name"]
-    record = book.find(name)
+    record = book.find_record(name)
 
     if not record:
         raise AddressBookError("Contact not found")
@@ -213,14 +213,14 @@ def show_all(_, book: AddressBook) -> str:
     if not book:
         raise AddressBookError("No contacts saved.")
 
-    result = "\n".join(str(record) for record in book.values())
+    result = "\n\n".join(str(record) for record in sorted(book.values(), key=lambda record: record.name.value.lower()))
     return result
     
 
 @catch_error
 @check_input(min_args=0, max_args=1)
 def birthdays(args, book: AddressBook) -> str:
-    requested_days = int(args[0]) if args else 7
+    requested_days = int(args.get("days", 7))
     birthdays_list = book.get_upcoming_birthdays(requested_days)
     result = []
     if not birthdays_list:
