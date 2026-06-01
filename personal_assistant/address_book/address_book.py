@@ -14,7 +14,8 @@ class AddressBook(UserDict):
         self.data[name] = record
 
     def rename_record(self, old_name: str, new_name: str) -> None:
-        record = self.data.pop(old_name)
+        real_key = next((key for key in self.data.keys() if key.lower() == old_name.lower()),None)
+        record = self.data.pop(real_key)
         self.data[new_name] = record
 
     def find(self, name: str) -> Record | None:
